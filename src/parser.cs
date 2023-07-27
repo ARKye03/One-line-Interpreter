@@ -1,104 +1,63 @@
-//parser
-namespace mini_kompiler;
+//Here I wanna create a parser for my expresions
+//Allow operations like sum, minus, etc betweem numbers and variables
+using System;
 
-public class Parser
-{
-    public Parser(string text)
-    {
-        this.text = text;
+namespace mini_compiler;
+
+public class Parser{
+    private Lexer lexer;
+    private Token current_token;
+    public Parser(Lexer lexer){
+        this.lexer = lexer;
+        this.current_token = lexer.get_next_token();
     }
-    public string text { get; set; }
-    public int index { get; set; }
-    public Token token { get; set; }
-    public Token nextToken()
-    {
-        if (index >= text.Length)
-        {
-            return new Token(TokenType.EOF, "");
-        }
-        else
-        {
-            char c = text[index];
-            index++;
-            if (c == '+')
-            {
-                return new Token(TokenType.PLUS, "+");
-            }
-            else if (c == '-')
-            {
-                return new Token(TokenType.MINUS, "-");
-            }
-            else if (c == '*')
-            {
-                return new Token(TokenType.ASTERISK, "*");
-            }
-            else if (c == '/')
-            {
-                return new Token(TokenType.SLASH, "/");
-            }
-            else if (c == '(')
-            {
-                return new Token(TokenType.LPAREN, "(");
-            }
-            else if (c == ')')
-            {
-                return new Token(TokenType.RPAREN, ")");
-            }
-            else
-            {
-                return new Token(TokenType.ILLEGAL, "");
-            }
+    private void error(){
+        throw new Exception("Invalid syntax");
+    }
+    private void eat(TokenType token_type){
+        if(current_token.type == token_type){
+            current_token = lexer.get_next_token();
+        }else{
+            error();
         }
     }
-    public void consume(TokenType type)
-    {
-        if (token.type == type)
-        {
-            token = nextToken();
-        }
-        else
-        {
-            throw new Exception("Unexpected token");
+    private void factor(){
+        Token token = current_token;
+        if(token.type == TokenType.Literal){
+            eat(TokenType.Literal);
+        }else if(token.type == TokenType.Identifier){
+            eat(TokenType.Identifier);
+        }else if(token.type == TokenType.LParen){
+            eat(TokenType.LParen);
+            expr();
+            eat(TokenType.RParen);
         }
     }
-    public int expr()
-    {
-        int left = term();
-        while (token.type == TokenType.PLUS || token.type == TokenType.MINUS)
-        {
-            TokenType op = token.type;
-            consume(token.type);
-            int right = term();
-            if (op == TokenType.PLUS)
-            {
-                left += right;
+    private void term(){
+        factor();
+        while(current_token.type == TokenType.Mul || current_token.type == TokenType.Div){
+            Token token = current_token;
+            if(token.type == TokenType.Mul){
+                eat(TokenType.Mul);
+            }else if(token.type == TokenType.Div){
+                eat(TokenType.Div);
             }
-            else
-            {
-                left -= right;
-            }
+            factor();
         }
-        return left;
     }
-    public int term()
-    {
-        int left = factor();
-        while (token.type == TokenType.ASTERISK || token.type == TokenType.SLASH)
-        {
-            TokenType op = token.type;
-            consume(token.type);
-            int right = factor();
-            if (op == TokenType.ASTERISK)
-            {
-                left *= right;
+    private void expr(){
+        term();
+        while(current_token.type == TokenType.Plus || current_token.type == TokenType.Minus){
+            Token token = current_token;
+            if(token.type == TokenType.Plus){
+                eat(TokenType.Plus);
+            }else if(token.type == TokenType.Minus){
+                eat(TokenType.Minus);
             }
-            else
-            {
-                left /= right;
-            }
+            term();
         }
-        return left;
+    }
+    public void parse(){
+        expr();
     }
 }
-    
-        
