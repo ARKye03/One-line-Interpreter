@@ -1,9 +1,8 @@
-//I wanna create expressions to use my token, lexer and parser
-//I want to apply mathematical operations to my expressions
+//I wanna print the tokens and the expresions
 using System;
 
-namespace mini_compiler;
 
+namespace mini_compiler;
 public class Expression{
     public static void Main(string[] args){
         while(true){
@@ -21,4 +20,3 @@ public class Expression{
         }
     }
 }
-

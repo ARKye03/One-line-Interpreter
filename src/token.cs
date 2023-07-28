@@ -3,35 +3,17 @@ using System;
 
 namespace mini_compiler;
 //Define some keywords, like function, if, else, etc
-//Define some types, like int, float, string, etc
-
-public enum Keyword{
-    Function,
-    If,
-    Else,
-    For,
-    While,
-    Return,
-    Break,
-    Continue,
-    True,
-    False,
-    Null
-}
-public enum Type{
-    Int,
-    Float,
-    String,
-    Bool,
-    Void
-}
-
-
-
 
 public enum TokenType{
-
-    Keyword,
+    Assign,
+    ArrowOperator,
+    FunctionDeclaration,
+    LetKeyword,
+    IfKeyword,
+    ElseKeyword,
+    PrintKeyword,
+    InKeyword,
+    FunctionKeyword,
     Type,
     Operator,
     Punctuation,
@@ -45,8 +27,6 @@ public enum TokenType{
     RParen,
     LBrace,
     RBrace,
-    LBracket,
-    RBracket,
     Semicolon,
     Colon,
     Comma,
@@ -54,7 +34,8 @@ public enum TokenType{
     Plus,
     Minus,
     Mul,
-    Div
+    Div,
+    StringLiteral
 }
 
 public class Token{
@@ -72,4 +53,21 @@ public class Token{
         return $"Token({type}, {value}, {line}, {column})";
     }
 }
+
+public class FunctionToken : Token
+{
+    public List<string> Parameters { get; }
+
+    public FunctionToken(TokenType type, string value, int line, int column, List<string> parameters)
+        : base(type, value, line, column)
+    {
+        Parameters = parameters;
+    }
+
+    public override string ToString()
+    {
+        return $"FunctionToken({type}, {value}, {line}, {column}, Parameters: [{string.Join(", ", Parameters)}])";
+    }
+}
+
 
