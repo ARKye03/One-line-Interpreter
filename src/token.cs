@@ -4,7 +4,8 @@ using System;
 namespace mini_compiler;
 //Define some keywords, like function, if, else, etc
 
-public enum TokenType{
+public enum TokenType
+{
     Assign,
     ArrowOperator,
     FunctionDeclaration,
@@ -19,14 +20,11 @@ public enum TokenType{
     Punctuation,
     Identifier,
     Literal,
-    Comment,
     Error,
     EOL,
     EOF,
     LParen,
     RParen,
-    LBrace,
-    RBrace,
     Semicolon,
     Colon,
     Comma,
@@ -34,22 +32,24 @@ public enum TokenType{
     Plus,
     Minus,
     Mul,
-    Div,
-    StringLiteral
+    Div
 }
 
-public class Token{
+public class Token
+{
     public TokenType type;
     public string value;
     public int line;
     public int column;
-    public Token(TokenType type, string value, int line, int column){
+    public Token(TokenType type, string value, int line, int column)
+    {
         this.type = type;
         this.value = value;
         this.line = line;
         this.column = column;
     }
-    public override string ToString(){
+    public override string ToString()
+    {
         return $"Token({type}, {value}, {line}, {column})";
     }
 }
