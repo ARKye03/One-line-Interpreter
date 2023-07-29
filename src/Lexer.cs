@@ -42,24 +42,34 @@ public class Lexer
     private Token number()
     {
         string result = "";
+        // Verificar el signo positivo o negativo
+        if (current_char == '-')
+        {
+            result += current_char;
+            advance();
+        }
+        // Reconocer la parte entera del número
         while (current_char != '\0' && char.IsDigit(current_char))
         {
             result += current_char;
             advance();
         }
+        // Reconocer la parte decimal del número (si existe)
         if (current_char == '.')
         {
             result += current_char;
             advance();
+
             while (current_char != '\0' && char.IsDigit(current_char))
             {
                 result += current_char;
                 advance();
             }
-            return new Token(TokenType.Literal, result, line, column);
         }
-        return new Token(TokenType.Literal, result, line, column);
+        // Devolver el token de número
+        return new Token(TokenType.Number, result, line, column);
     }
+
     private Token identifier()
     {
         string result = "";
@@ -70,6 +80,11 @@ public class Lexer
         }
         return new Token(TokenType.Identifier, result, line, column);
     }
+    private Token separator()
+    {
+        advance();
+        return new Token(TokenType.Separator, "@", line, column);
+    }
     private Token string_literal()
     {
         string result = "";
@@ -79,8 +94,12 @@ public class Lexer
             result += current_char;
             advance();
         }
-        advance();
-        return new Token(TokenType.Literal, result, line, column);
+        if (current_char == '\0')
+        {
+            throw new Exception($"Unterminated string literal at line {line} and column {column}");
+        }
+        advance(); // Consume el segundo '"' para avanzar al siguiente token
+        return new Token(TokenType.StringLiteral, result, line, column);
     }
     private Token keyword()
     {

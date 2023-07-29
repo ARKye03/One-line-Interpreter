@@ -6,8 +6,9 @@ namespace mini_compiler;
 
 public enum TokenType
 {
-    Assign,
-    ArrowOperator,
+    Assignment,
+    Number,
+    StringLiteral,
     FunctionDeclaration,
     LetKeyword,
     IfKeyword,
@@ -32,7 +33,8 @@ public enum TokenType
     Plus,
     Minus,
     Mul,
-    Div
+    Div,
+    Separator
 }
 
 public class Token
@@ -69,5 +71,18 @@ public class FunctionToken : Token
         return $"FunctionToken({type}, {value}, {line}, {column}, Parameters: [{string.Join(", ", Parameters)}])";
     }
 }
+public class AssignmentToken : Token
+{
+    public string VariableName { get; }
+    public object Value { get; }
+
+    public AssignmentToken(TokenType type, string variableName, object value, int line, int column)
+        : base(type, $"{variableName} = {value}", line, column)
+    {
+        VariableName = variableName;
+        Value = value;
+    }
+}
+
 
 
