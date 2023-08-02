@@ -2,8 +2,6 @@
 using System;
 namespace mini_compiler;
 
-
-
 public class Interpreter
 {
     public Lexer lexer;
@@ -31,19 +29,19 @@ public class Interpreter
                     }
                     else
                     {
-                        throw new Exception($"Invalid value inside print statement at line {nextToken.line} and column {nextToken.column}");
+                        Console.WriteLine($"Invalid value inside print statement at line {nextToken.line} and column {nextToken.column}");
                     }
 
                     // Verificar que se cierre el paréntesis
                     nextToken = lexer.get_next_token();
                     if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
                     {
-                        throw new Exception($"Expected ')' after value inside print statement at line {nextToken.line} and column {nextToken.column}");
+                        Console.WriteLine($"Expected ')' after value inside print statement at line {nextToken.line} and column {nextToken.column}");
                     }
                 }
                 else
                 {
-                    throw new Exception($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
+                    Console.WriteLine($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
                 }
             }
             else if (token.type == TokenType.LetKeyword)
@@ -54,7 +52,6 @@ public class Interpreter
             // Agregar más lógica para otros tipos de instrucciones si es necesario
         }
     }
-
     private Dictionary<string, object> variables = new Dictionary<string, object>();
 
     private void assignment()
@@ -62,13 +59,13 @@ public class Interpreter
         var variableToken = lexer.get_next_token();
         if (variableToken.type != TokenType.Identifier)
         {
-            throw new Exception($"Expected variable name after 'let' keyword at line {variableToken.line} and column {variableToken.column}");
+            Console.WriteLine($"Expected variable name after 'let' keyword at line {variableToken.line} and column {variableToken.column}");
         }
 
         var equalToken = lexer.get_next_token();
         if (equalToken.type != TokenType.Operator || equalToken.value != "=")
         {
-            throw new Exception($"Expected '=' after variable name at line {equalToken.line} and column {equalToken.column}");
+            Console.WriteLine($"Expected '=' after variable name at line {equalToken.line} and column {equalToken.column}");
         }
 
         // Evaluar la expresión para obtener el valor asignado
@@ -79,34 +76,36 @@ public class Interpreter
         var inToken = lexer.get_next_token();
         if (inToken.type != TokenType.InKeyword)
         {
-            throw new Exception($"Expected 'in' after variable assignment at line {inToken.line} and column {inToken.column}");
+            Console.WriteLine($"Expected 'in' after variable assignment at line {inToken.line} and column {inToken.column}");
         }
-
         // Ejecutar el siguiente statement (en este caso, solo se permite print)
         statement();
     }
     private void statement()
     {
         var token = lexer.get_next_token();
+
         if (token.type == TokenType.PrintKeyword)
         {
+            // Analizar el contenido entre paréntesis y ejecutar la acción correspondiente
             var nextToken = lexer.get_next_token();
             if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
             {
-                // Evaluar la expresión dentro del paréntesis
+                // Evaluar la expresión dentro de 'print(...)'
                 var expressionValue = expression();
-                Console.WriteLine(expressionValue);
 
                 // Verificar que se cierre el paréntesis
-                var closingParenToken = lexer.get_next_token();
-                if (closingParenToken.type != TokenType.Punctuation || closingParenToken.value != ")")
+                nextToken = lexer.get_next_token();
+                if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
                 {
-                    throw new Exception($"Expected ')' after value inside print statement at line {closingParenToken.line} and column {closingParenToken.column}");
+                    Console.WriteLine($"Expected ')' after value inside print statement at line {nextToken.line} and column {nextToken.column}");
                 }
+
+                Console.WriteLine(expressionValue); // Imprimir el resultado
             }
             else
             {
-                throw new Exception($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
+                Console.WriteLine($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
             }
         }
         else if (token.type == TokenType.LetKeyword)
@@ -114,64 +113,283 @@ public class Interpreter
             assignment();
         }
         // Agregar más lógica para otros tipos de instrucciones si es necesario
+        else
+        {
+            Console.WriteLine($"Invalid statement at line {token.line} and column {token.column}");
+        }
+    }
+    private object BinaryOperation(object left, Token operatorToken, object right)
+    {
+        if (operatorToken.type == TokenType.Operator)
+        {
+            if (operatorToken.value == "+")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left + (int)right;
+                }
+                else if (left is string && right is string)
+                {
+                    return (string)left + (string)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '+' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "-")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left - (int)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '-' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "*")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left * (int)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '*' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "/")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left / (int)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '/' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "%")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left % (int)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '%' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "==")
+            {
+                return left == right;
+            }
+            else if (operatorToken.value == "!=")
+            {
+                return left != right;
+            }
+            else if (operatorToken.value == ">")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left > (int)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '>' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "<")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left < (int)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '<' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == ">=")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left >= (int)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '>=' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "<=")
+            {
+                if (left is int && right is int)
+                {
+                    return (int)left <= (int)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '<=' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "&&")
+            {
+                if (left is bool && right is bool)
+                {
+                    return (bool)left && (bool)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '&&' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "||")
+            {
+                if (left is bool && right is bool)
+                {
+                    return (bool)left || (bool)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '||' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Invalid operator '{operatorToken.value}' at line {operatorToken.line} and column {operatorToken.column}");
+                return null!;
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Expected operator at line {operatorToken.line} and column {operatorToken.column}");
+            return null!;
+        }
     }
     private object expression()
     {
+        var left = term();
+
+        while (true)
+        {
+            var token = lexer.get_next_token();
+
+            if (token.type != TokenType.Operator || (token.value != "+" && token.value != "-"))
+            {
+                lexer.unget_token(token);
+                return left;
+            }
+
+            var right = term();
+            left = BinaryOperation(left, token, right);
+        }
+    }
+    private object term()
+    {
+        var left = power();
+
+        while (true)
+        {
+            var token = lexer.get_next_token();
+
+            if (token.type != TokenType.Operator || (token.value != "*" && token.value != "/" && token.value != "%"))
+            {
+                lexer.unget_token(token);
+                return left;
+            }
+
+            var right = power();
+            left = BinaryOperation(left, token, right);
+        }
+    }
+
+    private object power()
+    {
+        var left = primary();
+
+        while (true)
+        {
+            var token = lexer.get_next_token();
+
+            if (token.type != TokenType.Operator || token.value != "^")
+            {
+                lexer.unget_token(token);
+                return left;
+            }
+
+            var right = primary();
+            left = BinaryOperation(left, token, right);
+        }
+    }
+
+
+    private object factor()
+    {
+        var left = primary();
+
+        while (true)
+        {
+            var token = lexer.get_next_token();
+
+            if (token.type != TokenType.Operator || (token.value != "+" && token.value != "-"))
+            {
+                lexer.unget_token(token);
+                return left;
+            }
+
+            var right = primary();
+            left = BinaryOperation(left, token, right);
+        }
+    }
+
+    private object primary()
+    {
         var token = lexer.get_next_token();
 
-        if (token.type == TokenType.Number || token.type == TokenType.StringLiteral)
+        if (token.type == TokenType.Number)
+        {
+            return int.Parse(token.value);
+        }
+        else if (token.type == TokenType.StringLiteral)
         {
             return token.value;
         }
         else if (token.type == TokenType.Identifier)
         {
-            var variableName = token.value;
-            if (variables.ContainsKey(variableName))
+            if (variables.ContainsKey(token.value))
             {
-                return variables[variableName];
+                return variables[token.value];
             }
-            throw new Exception($"Variable '{variableName}' not found at line {token.line} and column {token.column}");
+            Console.WriteLine($"Undefined variable '{token.value}' at line {token.line} and column {token.column}");
+            return null!;
+        }
+        else if (token.type == TokenType.Punctuation && token.value == "(")
+        {
+            var expressionValue = expression();
+            var nextToken = lexer.get_next_token();
+            if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
+            {
+                Console.WriteLine($"Expected ')' after expression at line {nextToken.line} and column {nextToken.column}");
+                return null!;
+            }
+            return expressionValue;
         }
         else
         {
-            throw new Exception($"Invalid expression at line {token.line} and column {token.column}");
-        }
-    }
-
-}
-class c_ui
-{
-    static void Main(string[] args)
-    {
-        while (true)
-        {
-            Console.Write("> ");
-            string? sourceCode = Console.ReadLine();
-            if (sourceCode == "exit")
-            {
-                break;
-            }
-            Interpreter interpreter = new Interpreter(sourceCode);
-            interpreter.Run();
+            Console.WriteLine($"Invalid expression at line {token.line} and column {token.column}");
+            return null!;
         }
     }
 }
-
-
-//public class Expression{
-//    public static void Main(string[] args){
-//        while(true){
-//            Console.Write("> ");
-//            string? text = Console.ReadLine();
-//            if(text == "exit"){
-//                break;
-//            }
-//            Lexer lexer = new Lexer(text);
-//            Token token = lexer.get_next_token();
-//            while(token.type != TokenType.EOF){
-//                Console.WriteLine(token);
-//                token = lexer.get_next_token();
-//            }
-//        }
-//    }
-//}

@@ -1,5 +1,3 @@
-//Here is my lexer for my expressions
-
 using System;
 
 namespace mini_compiler;
@@ -11,6 +9,7 @@ public class Lexer
     private int line;
     private int column;
     private char current_char;
+    private List<Token> readTokens = new List<Token>();
     public Lexer(string text)
     {
         this.text = text;
@@ -19,6 +18,8 @@ public class Lexer
         this.column = 1;
         this.current_char = text[pos];
     }
+
+    // This function advances the position of the lexer by one character and updates the current character accordingly.
     private void advance()
     {
         pos++;
@@ -32,6 +33,8 @@ public class Lexer
             current_char = text[pos];
         }
     }
+
+    // This function skips any whitespace characters in the input text by advancing the lexer until a non-whitespace character is found.
     private void skip_whitespace()
     {
         while (current_char != '\0' && char.IsWhiteSpace(current_char))
@@ -39,6 +42,7 @@ public class Lexer
             advance();
         }
     }
+
     private Token number()
     {
         string result = "";
@@ -96,7 +100,7 @@ public class Lexer
         }
         if (current_char == '\0')
         {
-            throw new Exception($"Unterminated string literal at line {line} and column {column}");
+            Console.WriteLine($"Unterminated string literal at line {line} and column {column}");
         }
         advance(); // Consume el segundo '"' para avanzar al siguiente token
         return new Token(TokenType.StringLiteral, result, line, column);
@@ -146,7 +150,7 @@ public class Lexer
 
         if (!char.IsLetter(current_char))
         {
-            throw new Exception($"Expected a function name at line {line} and column {column}");
+            Console.WriteLine($"Expected a function name at line {line} and column {column}");
         }
 
         string function_name = "";
@@ -159,7 +163,7 @@ public class Lexer
         skip_whitespace();
         if (current_char != '(')
         {
-            throw new Exception($"Expected '(' after function name at line {line} and column {column}");
+            Console.WriteLine($"Expected '(' after function name at line {line} and column {column}");
         }
 
         // Analizar los parámetros de la función
@@ -169,7 +173,7 @@ public class Lexer
         {
             if (!char.IsLetter(current_char))
             {
-                throw new Exception($"Expected a parameter name at line {line} and column {column}");
+                Console.WriteLine($"Expected a parameter name at line {line} and column {column}");
             }
 
             string parameter_name = "";
@@ -191,7 +195,7 @@ public class Lexer
         var nextToken = get_next_token();
         if (nextToken.type != TokenType.Operator || nextToken.value != "=>")
         {
-            throw new Exception($"Expected '=>' after function parameters at line {line} and column {column}");
+            Console.WriteLine($"Expected '=>' after function parameters at line {line} and column {column}");
         }
 
         // Analizar el cuerpo de la función como una expresión
@@ -206,8 +210,18 @@ public class Lexer
         advance(); // Avanzar después del ')'
         return new FunctionToken(TokenType.FunctionDeclaration, function_name, line, column, parameters);
     }
+    public void unget_token(Token token)
+    {
+        readTokens.Insert(0, token);
+    }
     public Token get_next_token()
     {
+        if (readTokens.Count > 0)
+        {
+            Token token = readTokens[0];
+            readTokens.RemoveAt(0);
+            return token;
+        }
         while (current_char != '\0')
         {
             if (char.IsWhiteSpace(current_char))
@@ -228,7 +242,7 @@ public class Lexer
                     var functionNameToken = get_next_token();
                     if (functionNameToken.type != TokenType.Identifier)
                     {
-                        throw new Exception($"Expected a function name at line {line} and column {column}");
+                        Console.WriteLine($"Expected a function name at line {line} and column {column}");
                     }
 
                     // Verificar y reconocer los paréntesis después del nombre de la función
@@ -255,12 +269,12 @@ public class Lexer
                         }
                         else
                         {
-                            throw new Exception($"Expected ')' after function parameters at line {line} and column {column}");
+                            Console.WriteLine($"Expected ')' after function parameters at line {line} and column {column}");
                         }
                     }
                     else
                     {
-                        throw new Exception($"Expected '(' after function name at line {line} and column {column}");
+                        Console.WriteLine($"Expected '(' after function name at line {line} and column {column}");
                     }
                 }
                 else
@@ -395,8 +409,8 @@ public class Lexer
                 column = 1;
                 continue;
             }
-            throw new Exception($"Invalid character '{current_char}' at line {line} and column {column}");
+            Console.WriteLine($"Invalid character '{current_char}' at line {line} and column {column}");
         }
-        return new Token(TokenType.EOF, null, line, column);
+        return new Token(TokenType.EOF, null!, line, column);
     }
 }

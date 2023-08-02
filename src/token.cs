@@ -16,6 +16,7 @@ public enum TokenType
     PrintKeyword,
     InKeyword,
     FunctionKeyword,
+    InlineFunctionDeclaration,
     Type,
     Operator,
     Punctuation,
