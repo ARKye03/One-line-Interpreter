@@ -7,19 +7,40 @@ class c_ui
     {
         while (true)
         {
+            // Read source code
             Console.Write("> ");
             string? sourceCode = Console.ReadLine();
-            if (sourceCode == "exit")
+            // Source code is null or empty
+            if (sourceCode == "" || sourceCode == null)
             {
-                break;
-            }
-            if (sourceCode == "clear")
-            {
-                Console.Clear();
+                Console.WriteLine("Error: source code is null \nPress any key to repeat...");
+                Console.ReadKey();
                 continue;
             }
-            Interpreter interpreter = new Interpreter(sourceCode!);
-            interpreter.Run();
+            else
+            {
+                // Exit command
+                if (sourceCode == "exit")
+                {
+                    break;
+                }
+                // Clear command
+                if (sourceCode == "clear")
+                {
+                    Console.Clear();
+                    continue;
+                }
+                // Source code does not end with ';'
+                if (!sourceCode.EndsWith(";"))
+                {
+                    Console.WriteLine("Error: source code does not end with ';' -_- \nPress any key to repeat...");
+                    Console.ReadKey();
+                    continue;
+                }
+                // Run interpreter
+                Interpreter interpreter = new Interpreter(sourceCode!);
+                interpreter.Run();
+            }
         }
     }
 }

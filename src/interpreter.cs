@@ -21,16 +21,8 @@ public class Interpreter
                 var nextToken = lexer.get_next_token();
                 if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
                 {
-                    nextToken = lexer.get_next_token();
-                    if (nextToken.type == TokenType.Literal || nextToken.type == TokenType.Number || nextToken.type == TokenType.StringLiteral)
-                    {
-                        // Ejecutar la acción de imprimir el valor
-                        Console.WriteLine(nextToken.value);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Invalid value inside print statement at line {nextToken.line} and column {nextToken.column}");
-                    }
+                    // Evaluar la expresión dentro del print y obtener el resultado
+                    var expressionValue = expression();
 
                     // Verificar que se cierre el paréntesis
                     nextToken = lexer.get_next_token();
@@ -38,12 +30,18 @@ public class Interpreter
                     {
                         Console.WriteLine($"Expected ')' after value inside print statement at line {nextToken.line} and column {nextToken.column}");
                     }
+                    else
+                    {
+                        // Imprimir el resultado de la expresión evaluada
+                        Console.WriteLine(expressionValue);
+                    }
                 }
                 else
                 {
                     Console.WriteLine($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
                 }
             }
+
             else if (token.type == TokenType.LetKeyword)
             {
                 // Procesar la asignación de valores a variables
@@ -124,9 +122,9 @@ public class Interpreter
         {
             if (operatorToken.value == "+")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left + (int)right;
+                    return (float)left + (float)right;
                 }
                 else if (left is string && right is string)
                 {
@@ -140,9 +138,9 @@ public class Interpreter
             }
             else if (operatorToken.value == "-")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left - (int)right;
+                    return (float)left - (float)right;
                 }
                 else
                 {
@@ -152,9 +150,9 @@ public class Interpreter
             }
             else if (operatorToken.value == "*")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left * (int)right;
+                    return (float)left * (float)right;
                 }
                 else
                 {
@@ -162,11 +160,23 @@ public class Interpreter
                     return null!;
                 }
             }
+            else if (operatorToken.value == "^")
+            {
+                if (left is float && right is float)
+                {
+                    return Math.Pow((float)left, (float)right);
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '^' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
             else if (operatorToken.value == "/")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left / (int)right;
+                    return (float)left / (float)right;
                 }
                 else
                 {
@@ -176,9 +186,9 @@ public class Interpreter
             }
             else if (operatorToken.value == "%")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left % (int)right;
+                    return (float)left % (float)right;
                 }
                 else
                 {
@@ -196,9 +206,9 @@ public class Interpreter
             }
             else if (operatorToken.value == ">")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left > (int)right;
+                    return (float)left > (float)right;
                 }
                 else
                 {
@@ -208,9 +218,9 @@ public class Interpreter
             }
             else if (operatorToken.value == "<")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left < (int)right;
+                    return (float)left < (float)right;
                 }
                 else
                 {
@@ -220,9 +230,9 @@ public class Interpreter
             }
             else if (operatorToken.value == ">=")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left >= (int)right;
+                    return (float)left >= (float)right;
                 }
                 else
                 {
@@ -232,9 +242,9 @@ public class Interpreter
             }
             else if (operatorToken.value == "<=")
             {
-                if (left is int && right is int)
+                if (left is float && right is float)
                 {
-                    return (int)left <= (int)right;
+                    return (float)left <= (float)right;
                 }
                 else
                 {
@@ -360,7 +370,7 @@ public class Interpreter
 
         if (token.type == TokenType.Number)
         {
-            return int.Parse(token.value);
+            return float.Parse(token.value);
         }
         else if (token.type == TokenType.StringLiteral)
         {
