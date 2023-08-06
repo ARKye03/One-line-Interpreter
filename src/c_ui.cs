@@ -1,6 +1,9 @@
-//I wanna print the tokens and the expresions
-namespace mini_compiler;
+// Author: ARKye03
+// GitHub: https://github.com/ARKye03/mini_kompiler
+// License: MIT
 
+namespace mini_compiler;
+//Here I handle the io, with the console user interface(c_ui).
 class c_ui
 {
     static void Main(string[] args)

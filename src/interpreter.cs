@@ -140,7 +140,6 @@ public class Interpreter
         }
     }
 
-
     private object BinaryOperation(object left, Token operatorToken, object right)
     {
         if (operatorToken.type == TokenType.Operator)
@@ -170,6 +169,18 @@ public class Interpreter
                 else
                 {
                     Console.WriteLine($"Invalid operands for '-' operator at line {operatorToken.line} and column {operatorToken.column}");
+                    return null!;
+                }
+            }
+            else if (operatorToken.value == "@")
+            {
+                if (left is string && right is string)
+                {
+                    return (string)left + (string)right;
+                }
+                else
+                {
+                    Console.WriteLine($"Invalid operands for '@' operator at line {operatorToken.line} and column {operatorToken.column}");
                     return null!;
                 }
             }
@@ -321,14 +332,23 @@ public class Interpreter
         {
             var token = lexer.get_next_token();
 
-            if (token.type != TokenType.Operator || (token.value != "+" && token.value != "-"))
+            // Verificar si el operador es '@'
+            if (token.type == TokenType.Operator && token.value == "@")
             {
+                var right = term();
+                left = ConcatenateValues(left, right);
+            }
+            else if (token.type == TokenType.Operator && (token.value == "+" || token.value == "-"))
+            {
+                var right = term();
+                left = BinaryOperation(left, token, right);
+            }
+            else
+            {
+                // Si no es un operador, devolver el token al lexer para que pueda ser procesado en la siguiente iteración
                 lexer.unget_token(token);
                 return left;
             }
-
-            var right = term();
-            left = BinaryOperation(left, token, right);
         }
     }
     private object term()
@@ -349,7 +369,6 @@ public class Interpreter
             left = BinaryOperation(left, token, right);
         }
     }
-
     private object power()
     {
         var left = primary();
@@ -368,8 +387,6 @@ public class Interpreter
             left = BinaryOperation(left, token, right);
         }
     }
-
-
     private object factor()
     {
         var left = primary();
@@ -427,4 +444,34 @@ public class Interpreter
             return null!;
         }
     }
+    private object ConcatenateValues(object left, object right)
+    {
+        // Si ambos valores son cadenas, concatenarlos y devolver el resultado
+        if (left is string && right is string)
+        {
+            return (string)left + (string)right;
+        }
+
+        // Si alguno de los valores es una cadena, convertir el otro valor a cadena y concatenarlos
+        if (left is string)
+        {
+            return (string)left + right.ToString();
+        }
+
+        if (right is string)
+        {
+            return left.ToString() + (string)right;
+        }
+
+        // Si ninguno de los valores es cadena, intentar sumar los números
+        if (left is float && right is float)
+        {
+            return (float)left + (float)right;
+        }
+
+        // Si no se pueden concatenar los valores, mostrar un mensaje de error
+        Console.WriteLine($"Invalid operands for '@' operator at line ... and column ...");
+        return null!;
+    }
+
 }
