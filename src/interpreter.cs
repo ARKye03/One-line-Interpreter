@@ -51,19 +51,20 @@ public class Interpreter
         }
     }
     private Dictionary<string, object> variables = new Dictionary<string, object>();
-
     private void assignment()
     {
         var variableToken = lexer.get_next_token();
         if (variableToken.type != TokenType.Identifier)
         {
             Console.WriteLine($"Expected variable name after 'let' keyword at line {variableToken.line} and column {variableToken.column}");
+            return;
         }
 
         var equalToken = lexer.get_next_token();
         if (equalToken.type != TokenType.Operator || equalToken.value != "=")
         {
             Console.WriteLine($"Expected '=' after variable name at line {equalToken.line} and column {equalToken.column}");
+            return;
         }
 
         // Evaluar la expresión para obtener el valor asignado
@@ -71,11 +72,18 @@ public class Interpreter
 
         variables[variableToken.value] = value;
 
-        var inToken = lexer.get_next_token();
-        if (inToken.type != TokenType.InKeyword)
+        var nextToken = lexer.get_next_token();
+        if (nextToken.type == TokenType.Punctuation && nextToken.value == ",")
         {
-            Console.WriteLine($"Expected 'in' after variable assignment at line {inToken.line} and column {inToken.column}");
+            // Si hay una coma, continuar con la siguiente declaración
+            assignment();
         }
+        else if (nextToken.type != TokenType.InKeyword)
+        {
+            Console.WriteLine($"Expected 'in' or ',' after variable assignment at line {nextToken.line} and column {nextToken.column}");
+            return;
+        }
+
         // Ejecutar el siguiente statement (en este caso, solo se permite print)
         statement();
     }
@@ -111,11 +119,28 @@ public class Interpreter
             assignment();
         }
         // Agregar más lógica para otros tipos de instrucciones si es necesario
+        else if (token.type == TokenType.EOF)
+        {
+            return; // Fin del programa
+        }
         else
         {
             Console.WriteLine($"Invalid statement at line {token.line} and column {token.column}");
         }
+
+        // Verificar si hay un punto y coma y avanzar al siguiente statement
+        token = lexer.get_next_token(); // Reutilizar la variable 'token'
+        if (token.type == TokenType.EOL)
+        {
+            statement(); // Siguiente statement
+        }
+        else
+        {
+            lexer.unget_token(token); // Devolver el token para que se analice en la siguiente iteración
+        }
     }
+
+
     private object BinaryOperation(object left, Token operatorToken, object right)
     {
         if (operatorToken.type == TokenType.Operator)
