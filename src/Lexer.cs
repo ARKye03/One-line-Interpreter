@@ -1,5 +1,3 @@
-using System;
-
 namespace mini_compiler;
 
 public class Lexer
@@ -18,7 +16,6 @@ public class Lexer
         this.column = 1;
         this.current_char = text[pos];
     }
-
     // This function advances the position of the lexer by one character and updates the current character accordingly.
     private void advance()
     {
@@ -33,7 +30,6 @@ public class Lexer
             current_char = text[pos];
         }
     }
-
     // This function skips any whitespace characters in the input text by advancing the lexer until a non-whitespace character is found.
     private void skip_whitespace()
     {
@@ -42,7 +38,6 @@ public class Lexer
             advance();
         }
     }
-
     private Token number()
     {
         string result = "";
@@ -73,7 +68,6 @@ public class Lexer
         // Devolver el token de número
         return new Token(TokenType.Number, result, line, column);
     }
-
     private Token identifier()
     {
         string result = "";
@@ -132,16 +126,6 @@ public class Lexer
                 return new Token(TokenType.Identifier, result, line, column);
         }
     }
-    //private Token comment(){
-    //    string result = "";
-    //    advance();
-    //    while(current_char != '\0' && current_char != '\n'){
-    //        result += current_char;
-    //        advance();
-    //    }
-    //    advance();
-    //    return new Token(TokenType.Comment, result, line, column);
-    //}
     private Token function_declaration()
     {
         // Al encontrar 'function', esperamos el nombre de la función seguido de paréntesis.

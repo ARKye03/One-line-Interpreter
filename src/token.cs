@@ -1,8 +1,4 @@
-//I wanna create a compiler a define some tokens first
-using System;
-
 namespace mini_compiler;
-//Define some keywords, like function, if, else, etc
 
 public enum TokenType
 {
@@ -38,7 +34,6 @@ public enum TokenType
     Div,
     Separator
 }
-
 public class Token
 {
     public TokenType type;
@@ -57,7 +52,6 @@ public class Token
         return $"Token({type}, {value}, {line}, {column})";
     }
 }
-
 public class FunctionToken : Token
 {
     public List<string> Parameters { get; }
@@ -85,6 +79,3 @@ public class AssignmentToken : Token
         Value = value;
     }
 }
-
-
-

@@ -59,14 +59,12 @@ public class Interpreter
             Console.WriteLine($"Expected variable name after 'let' keyword at line {variableToken.line} and column {variableToken.column}");
             return;
         }
-
         var equalToken = lexer.get_next_token();
         if (equalToken.type != TokenType.Operator || equalToken.value != "=")
         {
             Console.WriteLine($"Expected '=' after variable name at line {equalToken.line} and column {equalToken.column}");
             return;
         }
-
         // Evaluar la expresión para obtener el valor asignado
         var value = expression();
 
@@ -127,7 +125,6 @@ public class Interpreter
         {
             Console.WriteLine($"Invalid statement at line {token.line} and column {token.column}");
         }
-
         // Verificar si hay un punto y coma y avanzar al siguiente statement
         token = lexer.get_next_token(); // Reutilizar la variable 'token'
         if (token.type == TokenType.EOL)
@@ -139,7 +136,6 @@ public class Interpreter
             lexer.unget_token(token); // Devolver el token para que se analice en la siguiente iteración
         }
     }
-
     private object BinaryOperation(object left, Token operatorToken, object right)
     {
         if (operatorToken.type == TokenType.Operator)
@@ -405,7 +401,6 @@ public class Interpreter
             left = BinaryOperation(left, token, right);
         }
     }
-
     private object primary()
     {
         var token = lexer.get_next_token();
@@ -476,7 +471,6 @@ public class Interpreter
         {
             return (string)left + (string)right;
         }
-
         // Si alguno de los valores es una cadena, convertir el otro valor a cadena y concatenarlos
         if (left is string)
         {
@@ -487,16 +481,13 @@ public class Interpreter
         {
             return left.ToString() + (string)right;
         }
-
         // Si ninguno de los valores es cadena, intentar sumar los números
         if (left is float && right is float)
         {
             return (float)left + (float)right;
         }
-
         // Si no se pueden concatenar los valores, mostrar un mensaje de error
         Console.WriteLine($"Invalid operands for '@' operator at line ... and column ...");
         return null!;
     }
-
 }
