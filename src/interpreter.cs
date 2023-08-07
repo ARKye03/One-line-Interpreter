@@ -438,6 +438,31 @@ public class Interpreter
             }
             return expressionValue;
         }
+        else if (token.type == TokenType.LetKeyword && token.value == "let")
+        {
+            var variableToken = lexer.get_next_token();
+            if (variableToken.type != TokenType.Identifier)
+            {
+                Console.WriteLine($"Expected identifier after 'let' keyword at line {variableToken.line} and column {variableToken.column}");
+                return null!;
+            }
+            var equalsToken = lexer.get_next_token();
+            if (equalsToken.type != TokenType.Operator || equalsToken.value != "=")
+            {
+                Console.WriteLine($"Expected '=' after identifier in 'let' expression at line {equalsToken.line} and column {equalsToken.column}");
+                return null!;
+            }
+            var value = expression();
+            variables[variableToken.value] = value;
+            var nextToken = lexer.get_next_token();
+            if (nextToken.type != TokenType.InKeyword || nextToken.value != "in")
+            {
+                Console.WriteLine($"Expected 'in' keyword after expression in 'let' expression at line {nextToken.line} and column {nextToken.column}");
+                return null!;
+            }
+            var expressionValue = expression();
+            return expressionValue;
+        }
         else
         {
             Console.WriteLine($"Invalid expression at line {token.line} and column {token.column}");

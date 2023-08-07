@@ -13,6 +13,7 @@ public enum TokenType
     LetKeyword,
     IfKeyword,
     ElseKeyword,
+    ThenKeyword,
     PrintKeyword,
     InKeyword,
     FunctionKeyword,
