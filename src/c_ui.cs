@@ -120,8 +120,8 @@ class c_ui
             // Serialize the settings to JSON
             string json = JsonSerializer.Serialize(this);
             // Write the JSON to the file
-            Directory.CreateDirectory(".vscode");
-            File.WriteAllText(".vscode/settings.json", json);
+            Directory.CreateDirectory(".settings");
+            File.WriteAllText(".settings/settings.json", json);
         }
     }
 }
