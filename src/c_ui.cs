@@ -87,7 +87,7 @@ class c_ui
     private static bool SayBye()
     {
         // Check if the settings file exists
-        if (!File.Exists(".vscode/settings.json"))
+        if (!File.Exists(".settings/settings.json"))
         {
             // Create a new settings object
             {
@@ -97,14 +97,14 @@ class c_ui
             string json = JsonSerializer.Serialize(settings);
             // Write the JSON to the file
             Directory.CreateDirectory(".vscode");
-            File.WriteAllText(".vscode/settings.json", json);
+            File.WriteAllText(".settings/settings.json", json);
             // Return true since say_hello is true by default
             return true;
         }
         else
         {
             // Load the settings from the JSON file
-            string json = File.ReadAllText(".vscode/settings.json");
+            string json = File.ReadAllText(".settings/settings.json");
             Settings? settings = JsonSerializer.Deserialize<Settings>(json);
             // Return the value of the say_hello property
             return settings!.say_hello;
