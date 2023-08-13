@@ -4,7 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 #kompiler_settings
-.settings
+.settings/*
+!.settings/.gitkeep
 
 # User-specific files
 *.rsuser
