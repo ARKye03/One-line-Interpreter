@@ -13,9 +13,32 @@
 
 ## Requirements
 
+- [Git](https://git-scm.com/)
 - [DotNet7.0](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
 
 ## How to use
+
+### Script Install
+
+Using wget:
+
+```shell
+sh -c "$(wget https://raw.githubusercontent.com/ARKye03/scripts/main/%5Bsh%5D%20mini_kompiler/install.sh -O -)"
+```
+
+Using curl:
+
+```shell
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ARKye03/scripts/main/%5Bsh%5D%20mini_kompiler/install.sh)"
+```
+
+Then:
+
+```shell
+cd mini_kompiler/
+```
+
+### Manual install
 
 ```shell
 git clone https://github.com/ARKye03/mini_kompiler
@@ -26,6 +49,10 @@ Open a terminal and `cd /mini_kompiler`, then run:
 ```shell
 dotnet run
 ```
+
+#### Note
+
+  -The script install will check simple dependencies and try to install them if missing
 
 ## Contributing
 
