@@ -36,9 +36,10 @@ Then:
 
 ```shell
 cd mini_kompiler/
+dotnet run
 ```
 
-### Manual install
+### Clone install
 
 ```shell
 git clone https://github.com/ARKye03/mini_kompiler
