@@ -5,8 +5,14 @@ using System.Text.Json;
 
 namespace mini_compiler;
 //Here I handle the io, with the console user interface(c_ui).
-class c_ui
+public class c_ui
 {
+    public static void Test(string sourceCode)
+    {
+        // Run interpreter
+        Interpreter interpreter = new(sourceCode!);
+        interpreter.Run();
+    }
     static void Main(string[] args)
     {
         if (SayBye())
