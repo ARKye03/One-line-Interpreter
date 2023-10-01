@@ -458,6 +458,16 @@ public class Interpreter
             var expressionValue = expression();
             return expressionValue;
         }
+        else if (token.type == TokenType.Operator && token.value == "-")
+        {
+            var nextToken = lexer.get_next_token();
+            if (nextToken.type == TokenType.Number)
+            {
+                return -float.Parse(nextToken.value);
+            }
+            Console.WriteLine($"Expected number after '-' operator at line {nextToken.line} and column {nextToken.column}");
+            return null!;
+        }
         else
         {
             Console.WriteLine($"Invalid expression at line {token.line} and column {token.column}");
