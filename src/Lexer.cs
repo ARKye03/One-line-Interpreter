@@ -38,6 +38,18 @@ public class Lexer
             advance();
         }
     }
+    private char peek()
+    {
+        var peek_pos = pos + 1;
+        if (peek_pos >= text.Length)
+        {
+            return '\0';
+        }
+        else
+        {
+            return text[peek_pos];
+        }
+    }
     private Token number()
     {
         string result = "";
@@ -338,49 +350,80 @@ public class Lexer
             }
             if (current_char == '=')
             {
+                if (peek() == '>')
+                {
+                    advance();
+                    advance();
+                    return new Token(TokenType.FLinq, "=>", line, column);
+                }
+                else if (peek() == '=')
+                {
+                    advance();
+                    advance();
+                    return new Token(TokenType.ComparisonOperator, "==", line, column);
+                }
                 advance();
                 return new Token(TokenType.Operator, "=", line, column);
+
             }
-            if (current_char == '<')
+            else if (current_char == '<')
             {
+                if (peek() == '=')
+                {
+                    advance();
+                    advance();
+                    return new Token(TokenType.ComparisonOperator, "<=", line, column);
+                }
                 advance();
-                return new Token(TokenType.Operator, "<", line, column);
+                return new Token(TokenType.ComparisonOperator, "<", line, column);
             }
-            if (current_char == '>')
+            else if (current_char == '>')
             {
+                if (peek() == '=')
+                {
+                    advance();
+                    advance();
+                    return new Token(TokenType.ComparisonOperator, ">=", line, column);
+                }
                 advance();
-                return new Token(TokenType.Operator, ">", line, column);
+                return new Token(TokenType.ComparisonOperator, ">", line, column);
             }
-            if (current_char == '!')
+            else if (current_char == '!')
             {
+                if (peek() == '=')
+                {
+                    advance();
+                    advance();
+                    return new Token(TokenType.ComparisonOperator, "!=", line, column);
+                }
                 advance();
                 return new Token(TokenType.Operator, "!", line, column);
             }
-            if (current_char == '&')
-            {
-                advance();
-                return new Token(TokenType.Operator, "&", line, column);
-            }
-            if (current_char == '|')
-            {
-                advance();
-                return new Token(TokenType.Operator, "|", line, column);
-            }
-            if (current_char == '%')
-            {
-                advance();
-                return new Token(TokenType.Operator, "%", line, column);
-            }
+            //if (current_char == '&')
+            //{
+            //    advance();
+            //    return new Token(TokenType.Operator, "&", line, column);
+            //}
+            //if (current_char == '|')
+            //{
+            //    advance();
+            //    return new Token(TokenType.Operator, "|", line, column);
+            //}
+            //if (current_char == '%')
+            //{
+            //    advance();
+            //    return new Token(TokenType.Operator, "%", line, column);
+            //}
             if (current_char == '^')
             {
                 advance();
                 return new Token(TokenType.Operator, "^", line, column);
             }
-            if (current_char == '~')
-            {
-                advance();
-                return new Token(TokenType.Operator, "~", line, column);
-            }
+            //if (current_char == '~')
+            //{
+            //    advance();
+            //    return new Token(TokenType.Operator, "~", line, column);
+            //}
             if (current_char == '.')
             {
                 advance();

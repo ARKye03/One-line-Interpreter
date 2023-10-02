@@ -2,6 +2,8 @@ namespace mini_compiler;
 
 public enum TokenType
 {
+    FLinq,
+    ComparisonOperator,
     Assignment,
     Number,
     StringLiteral,
