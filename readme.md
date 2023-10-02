@@ -1,7 +1,7 @@
-# Mini Kompiler - HULK
+# Mini Kompiler
 
-<p align="center">
-  <img src="hulk_logo.png" alt="mini_kompiler_logo" width="500">
+<p align="center"> 
+  <img src="hulk_logo.png" alt="mini_kompiler_logo" width="500"> 
 </p>
 
 ## Table of Contents
@@ -72,5 +72,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
   - WTF is this -> let number = 42, z = 4 in let x = number * 2 in let y = 3 in print((z + x) ^ y); Also works. Strings works surpresingly well.
   - This is even worst let x = 5, y = x + 12 in let z = x + y in print((x + y + z) ^(let uper = 5 in uper - 3)); And it works too. Don't ask me why.
 - Also, you can declare functions like `function read_line(x)`, and it will recognize the function, function name and parameters, but it won't do a shit.
-- Conditions are also processed, but they just, don't work.
-- #conditions_are_a_fvcking_nightmare!
+- Conditions are also processed, but they just, don't work. That was 2 month ago, now they work 😈
+- #conditions_were_a_fvcking_nightmare!
+  - let x = 5 in if ((let y = 2 in y*y) < 5) print("Voila") else print("f"); -> shows Voila.
+  - if (42 % 2 == 60 - 60) print("Yes") else print("F"); shows -> Yes, I mean literally prints yes
