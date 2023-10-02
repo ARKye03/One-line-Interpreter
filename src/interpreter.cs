@@ -158,7 +158,7 @@ public class Interpreter
             return;
         }
 
-        // Ejecutar el siguiente statement (en este caso, solo se permite print)
+        // Ejecutar el siguiente statement 
         statement();
     }
     private void statement()
@@ -191,6 +191,10 @@ public class Interpreter
         else if (token.type == TokenType.LetKeyword)
         {
             assignment();
+        }
+        else if (token.type == TokenType.IfKeyword)
+        {
+            Conditional();
         }
         // Agregar más lógica para otros tipos de instrucciones si es necesario
         else if (token.type == TokenType.EOF)

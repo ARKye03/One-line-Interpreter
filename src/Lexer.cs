@@ -409,11 +409,11 @@ public class Lexer
             //    advance();
             //    return new Token(TokenType.Operator, "|", line, column);
             //}
-            //if (current_char == '%')
-            //{
-            //    advance();
-            //    return new Token(TokenType.Operator, "%", line, column);
-            //}
+            if (current_char == '%')
+            {
+                advance();
+                return new Token(TokenType.Operator, "%", line, column);
+            }
             if (current_char == '^')
             {
                 advance();
