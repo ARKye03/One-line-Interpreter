@@ -7,9 +7,34 @@ namespace mini_compiler.test;
 public class MyTests
 {
     [Test]
-    public void InTest()
+    public void LetCondIn()
     {
-        Assert.That(RunInterpreter("let x = 5 in print((x + (let y = 2 in y*y))^2);"), Is.EqualTo("81"));
+        Assert.That(RunInterpreter("let x = 5 in if ((let y = 2 in y*y) < 5) print(\"Voila\") else print(\"f\");"), Is.EqualTo("Voila"));
+    }
+
+    [Test]
+    public void CondIn()
+    {
+        Assert.That(RunInterpreter("if (42 % 2 == 60 - 60) print(\"Yes\") else print(\"F\");"), Is.EqualTo("Yes"));
+    }
+
+    [Test]
+    public void Cond1Test()
+    {
+        Assert.That(RunInterpreter("if (3 < 4) print(\"Hello\") else print(\"perro\");"), Is.EqualTo("Hello"));
+    }
+    //if (3 < 4) print("Hello") else print("perro");
+
+    [Test]
+    public void Cond2Test()
+    {
+        Assert.That(RunInterpreter("if (5 < 4) print(\"Hello\") else print(\"perro\");"), Is.EqualTo("perro"));
+    }
+    //if (5 < 4) print("Hello") else print("perro");
+    [Test]
+    public void NegativeTest()
+    {
+        Assert.That(RunInterpreter("let x = -5 in print(x - 3);"), Is.EqualTo("-8"));
     }
 
     [Test]
