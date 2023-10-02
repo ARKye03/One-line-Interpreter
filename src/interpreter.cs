@@ -11,47 +11,48 @@ public class Interpreter
     public void Run()
     {
         Token token;
-        while ((token = lexer.get_next_token()).type != TokenType.EOF)
+        //while ((token = lexer.get_next_token()).type != TokenType.EOF)
+        //{
+        token = lexer.get_next_token();
+        if (token.type == TokenType.PrintKeyword)
         {
-            if (token.type == TokenType.PrintKeyword)
+            // Analizar el contenido entre paréntesis y ejecutar la acción correspondiente
+            var nextToken = lexer.get_next_token();
+            if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
             {
-                // Analizar el contenido entre paréntesis y ejecutar la acción correspondiente
-                var nextToken = lexer.get_next_token();
-                if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
-                {
-                    // Evaluar la expresión dentro del print y obtener el resultado
-                    var expressionValue = expression();
+                // Evaluar la expresión dentro del print y obtener el resultado
+                var expressionValue = expression();
 
-                    // Verificar que se cierre el paréntesis
-                    nextToken = lexer.get_next_token();
-                    if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
-                    {
-                        Console.WriteLine($"Expected ')' after value inside print statement at line {nextToken.line} and column {nextToken.column}");
-                    }
-                    else
-                    {
-                        // Imprimir el resultado de la expresión evaluada
-                        Console.WriteLine(expressionValue);
-                    }
+                // Verificar que se cierre el paréntesis
+                nextToken = lexer.get_next_token();
+                if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
+                {
+                    Console.WriteLine($"Expected ')' after value inside print statement at line {nextToken.line} and column {nextToken.column}");
                 }
                 else
                 {
-                    Console.WriteLine($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
+                    // Imprimir el resultado de la expresión evaluada
+                    Console.WriteLine(expressionValue);
                 }
             }
-
-            else if (token.type == TokenType.LetKeyword)
+            else
             {
-                // Procesar la asignación de valores a variables
-                assignment();
+                Console.WriteLine($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
             }
-            else if (token.type == TokenType.IfKeyword)
-            {
-                // Procesar la instrucción condicional
-                Conditional();
-            }
-            // Agregar más lógica para otros tipos de instrucciones si es necesario
         }
+
+        else if (token.type == TokenType.LetKeyword)
+        {
+            // Procesar la asignación de valores a variables
+            assignment();
+        }
+        else if (token.type == TokenType.IfKeyword)
+        {
+            // Procesar la instrucción condicional
+            Conditional();
+        }
+        // Agregar más lógica para otros tipos de instrucciones si es necesario
+        //}
     }
     private void Conditional()
     {
@@ -105,7 +106,10 @@ public class Interpreter
             else
             {
                 // Saltar al else
-                token = lexer.get_next_token();
+                while (token.type != TokenType.ElseKeyword && token.type != TokenType.EOL)
+                {
+                    token = lexer.get_next_token();
+                }
                 if (token.type == TokenType.ElseKeyword)
                 {
                     statement();
@@ -300,86 +304,86 @@ public class Interpreter
                     return null!;
                 }
             }
-            else if (operatorToken.value == "==")
-            {
-                return left == right;
-            }
-            else if (operatorToken.value == "!=")
-            {
-                return left != right;
-            }
-            else if (operatorToken.value == ">")
-            {
-                if (left is float && right is float)
-                {
-                    return (float)left > (float)right;
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid operands for '>' operator at line {operatorToken.line} and column {operatorToken.column}");
-                    return null!;
-                }
-            }
-            else if (operatorToken.value == "<")
-            {
-                if (left is float && right is float)
-                {
-                    return (float)left < (float)right;
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid operands for '<' operator at line {operatorToken.line} and column {operatorToken.column}");
-                    return null!;
-                }
-            }
-            else if (operatorToken.value == ">=")
-            {
-                if (left is float && right is float)
-                {
-                    return (float)left >= (float)right;
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid operands for '>=' operator at line {operatorToken.line} and column {operatorToken.column}");
-                    return null!;
-                }
-            }
-            else if (operatorToken.value == "<=")
-            {
-                if (left is float && right is float)
-                {
-                    return (float)left <= (float)right;
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid operands for '<=' operator at line {operatorToken.line} and column {operatorToken.column}");
-                    return null!;
-                }
-            }
-            else if (operatorToken.value == "&&")
-            {
-                if (left is bool && right is bool)
-                {
-                    return (bool)left && (bool)right;
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid operands for '&&' operator at line {operatorToken.line} and column {operatorToken.column}");
-                    return null!;
-                }
-            }
-            else if (operatorToken.value == "||")
-            {
-                if (left is bool && right is bool)
-                {
-                    return (bool)left || (bool)right;
-                }
-                else
-                {
-                    Console.WriteLine($"Invalid operands for '||' operator at line {operatorToken.line} and column {operatorToken.column}");
-                    return null!;
-                }
-            }
+            //else if (operatorToken.value == "==")
+            //{
+            //    return left == right;
+            //}
+            //else if (operatorToken.value == "!=")
+            //{
+            //    return left != right;
+            //}
+            //else if (operatorToken.value == ">")
+            //{
+            //    if (left is float && right is float)
+            //    {
+            //        return (float)left > (float)right;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Invalid operands for '>' operator at line {operatorToken.line} and column {operatorToken.column}");
+            //        return null!;
+            //    }
+            //}
+            //else if (operatorToken.value == "<")
+            //{
+            //    if (left is float && right is float)
+            //    {
+            //        return (float)left < (float)right;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Invalid operands for '<' operator at line {operatorToken.line} and column {operatorToken.column}");
+            //        return null!;
+            //    }
+            //}
+            //else if (operatorToken.value == ">=")
+            //{
+            //    if (left is float && right is float)
+            //    {
+            //        return (float)left >= (float)right;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Invalid operands for '>=' operator at line {operatorToken.line} and column {operatorToken.column}");
+            //        return null!;
+            //    }
+            //}
+            //else if (operatorToken.value == "<=")
+            //{
+            //    if (left is float && right is float)
+            //    {
+            //        return (float)left <= (float)right;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Invalid operands for '<=' operator at line {operatorToken.line} and column {operatorToken.column}");
+            //        return null!;
+            //    }
+            //}
+            //else if (operatorToken.value == "&&")
+            //{
+            //    if (left is bool && right is bool)
+            //    {
+            //        return (bool)left && (bool)right;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Invalid operands for '&&' operator at line {operatorToken.line} and column {operatorToken.column}");
+            //        return null!;
+            //    }
+            //}
+            //else if (operatorToken.value == "||")
+            //{
+            //    if (left is bool && right is bool)
+            //    {
+            //        return (bool)left || (bool)right;
+            //    }
+            //    else
+            //    {
+            //        Console.WriteLine($"Invalid operands for '||' operator at line {operatorToken.line} and column {operatorToken.column}");
+            //        return null!;
+            //    }
+            //}
             else
             {
                 Console.WriteLine($"Invalid operator '{operatorToken.value}' at line {operatorToken.line} and column {operatorToken.column}");
