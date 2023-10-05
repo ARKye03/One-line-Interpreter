@@ -53,13 +53,13 @@ public class Interpreter
             // Procesar la instrucción condicional
             Conditional();
         }
-        foreach (var function in functions)
-        {
-            if (token.type == TokenType.FunctionDeclaration)
-            {
-                //System.Console.WriteLine("HIs");
-            }
-        }
+
+    }
+    private void FuncParser(DFunction df)
+    {
+        var expression = df.expression;
+        List<string> pars = df.parameters;
+
 
     }
     private void Conditional()
@@ -493,6 +493,13 @@ public class Interpreter
     {
         var token = lexer.get_next_token();
 
+        foreach (var func in functions)
+        {
+            if (token.value == func.value)
+            {
+                return func.expression;
+            }
+        }
         if (token.type == TokenType.Number)
         {
             return float.Parse(token.value);
