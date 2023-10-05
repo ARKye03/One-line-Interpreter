@@ -54,30 +54,3 @@ public class Token
         return $"Token({type}, {value}, {line}, {column})";
     }
 }
-public class FunctionToken : Token
-{
-    public List<string> Parameters { get; }
-
-    public FunctionToken(TokenType type, string value, int line, int column, List<string> parameters)
-        : base(type, value, line, column)
-    {
-        Parameters = parameters;
-    }
-
-    public override string ToString()
-    {
-        return $"FunctionToken({type}, {value}, {line}, {column}, Parameters: [{string.Join(", ", Parameters)}])";
-    }
-}
-public class AssignmentToken : Token
-{
-    public string VariableName { get; }
-    public object Value { get; }
-
-    public AssignmentToken(TokenType type, string variableName, object value, int line, int column)
-        : base(type, $"{variableName} = {value}", line, column)
-    {
-        VariableName = variableName;
-        Value = value;
-    }
-}

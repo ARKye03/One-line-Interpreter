@@ -3,6 +3,7 @@ namespace mini_compiler;
 public class Interpreter
 {
     public Lexer lexer;
+    public List<DFunction> functions;
 
     public Interpreter(string sourceCode)
     {
@@ -10,6 +11,7 @@ public class Interpreter
     }
     public void Run()
     {
+        functions = FunctionToken.functions;
         Token token;
         //while ((token = lexer.get_next_token()).type != TokenType.EOF)
         //{
@@ -51,8 +53,14 @@ public class Interpreter
             // Procesar la instrucción condicional
             Conditional();
         }
-        // Agregar más lógica para otros tipos de instrucciones si es necesario
-        //}
+        foreach (var function in functions)
+        {
+            if (token.type == TokenType.FunctionDeclaration)
+            {
+                //System.Console.WriteLine("HIs");
+            }
+        }
+
     }
     private void Conditional()
     {

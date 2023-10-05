@@ -1,7 +1,7 @@
 # Mini Kompiler
 
-<p align="center"> 
-  <img src="hulk_logo.png" alt="mini_kompiler_logo" width="500"> 
+<p align="center">
+  <img src="hulk_logo.png" alt="mini_kompiler_logo" width="500">
 </p>
 
 ## Table of Contents

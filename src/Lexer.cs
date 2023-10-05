@@ -188,8 +188,9 @@ public class Lexer
                 skip_whitespace();
             }
         }
+        advance(); // Avanzar después del ')'
         var nextToken = get_next_token();
-        if (nextToken.type != TokenType.Operator || nextToken.value != "=>")
+        if (nextToken.type != TokenType.FLinq || nextToken.value != "=>")
         {
             Console.WriteLine($"Expected '=>' after function parameters at line {line} and column {column}");
         }
@@ -197,14 +198,13 @@ public class Lexer
         // Analizar el cuerpo de la función como una expresión
         var expressionTokens = new List<Token>();
         nextToken = get_next_token();
-        while (nextToken.type != TokenType.Punctuation || nextToken.value != ";")
+        while (nextToken.type != TokenType.Semicolon && nextToken.type != TokenType.EOF)
         {
             expressionTokens.Add(nextToken);
             nextToken = get_next_token();
         }
 
-        advance(); // Avanzar después del ')'
-        return new FunctionToken(TokenType.FunctionDeclaration, function_name, line, column, parameters);
+        return new FunctionToken(TokenType.FunctionDeclaration, function_name, line, column, parameters, expressionTokens);
     }
     public void unget_token(Token token)
     {
@@ -234,44 +234,7 @@ public class Lexer
                 var token = keyword();
                 if (token.type == TokenType.FunctionKeyword)
                 {
-                    // Reconocer el nombre de la función
-                    var functionNameToken = get_next_token();
-                    if (functionNameToken.type != TokenType.Identifier)
-                    {
-                        Console.WriteLine($"Expected a function name at line {line} and column {column}");
-                    }
-
-                    // Verificar y reconocer los paréntesis después del nombre de la función
-                    var nextToken = get_next_token();
-                    if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
-                    {
-                        var parameters = new List<string>();
-
-                        // Reconocer los parámetros dentro de la declaración de función
-                        nextToken = get_next_token();
-                        while (nextToken.type == TokenType.Identifier)
-                        {
-                            parameters.Add(nextToken.value);
-                            nextToken = get_next_token();
-                            if (nextToken.type == TokenType.Punctuation && nextToken.value == ",")
-                            {
-                                nextToken = get_next_token();
-                            }
-                        }
-
-                        if (nextToken.type == TokenType.Punctuation && nextToken.value == ")")
-                        {
-                            return new FunctionToken(TokenType.FunctionDeclaration, functionNameToken.value, functionNameToken.line, functionNameToken.column, parameters);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Expected ')' after function parameters at line {line} and column {column}");
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Expected '(' after function name at line {line} and column {column}");
-                    }
+                    return function_declaration();
                 }
                 else
                 {
