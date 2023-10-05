@@ -6,6 +6,20 @@ namespace mini_compiler.test;
 [TestFixture]
 public class MyTests
 {
+
+    [Test]
+    public void Func2()
+    {
+        Assert.That(RunInterpreter("function Pow(x,y) => x^y;"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(Pow(5,2));"), Is.EqualTo("25"));
+    }
+    [Test]
+    public void Func1()
+    {
+        Assert.That(RunInterpreter("function Pow(x,y) => x^y;"), Is.EqualTo(""));
+        //Assert.That(RunInterpreter("print(Pow(5,2));"), Is.EqualTo("25"));
+    }
+
     [Test]
     public void LetCondIn()
     {
