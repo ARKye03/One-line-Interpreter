@@ -6,6 +6,7 @@
 #kompiler_settings
 .settings/*
 !.settings/.gitkeep
+.VSCodeCounter/*
 
 # User-specific files
 *.rsuser
