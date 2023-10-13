@@ -41,7 +41,6 @@ public partial class Interpreter
                 lexer.unget_token(token);
                 return left;
             }
-
             var right = power();
             left = BinaryOperation(left, token, right);
         }
@@ -59,25 +58,6 @@ public partial class Interpreter
                 lexer.unget_token(token);
                 return left;
             }
-
-            var right = primary();
-            left = BinaryOperation(left, token, right);
-        }
-    }
-    private object factor()
-    {
-        var left = primary();
-
-        while (true)
-        {
-            var token = lexer.get_next_token();
-
-            if (token.type != TokenType.Operator || (token.value != "+" && token.value != "-"))
-            {
-                lexer.unget_token(token);
-                return left;
-            }
-
             var right = primary();
             left = BinaryOperation(left, token, right);
         }
@@ -86,13 +66,32 @@ public partial class Interpreter
     {
         var token = lexer.get_next_token();
 
-        foreach (var func in functions!)
+        var function = functions?.Find(func => func.value == token.value);
+        if (function != null)
         {
-            if (token.value == func.value)
+            List<object> args = new();
+            var nextToken = lexer.get_next_token();
+            if (nextToken.value != "(" || nextToken.type != TokenType.Punctuation)
             {
-                return func.expression;
+                Console.WriteLine($"Expected \"(\" after function name at {nextToken.column}");
             }
+            while (true)
+            {
+                var arg = expression();
+                args.Add(arg);
+                var delimiterToken = lexer.get_next_token();
+                if (delimiterToken.value == ")")
+                {
+                    break;
+                }
+                else if (delimiterToken.value != "," || delimiterToken.type != TokenType.Punctuation)
+                {
+                    Console.WriteLine($"Expected \",\" or \")\" after function argument at {delimiterToken.column}");
+                }
+            }
+            return EvaFurras(function, args);
         }
+
         if (token.type == TokenType.Number)
         {
             return float.Parse(token.value);
