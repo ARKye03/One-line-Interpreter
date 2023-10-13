@@ -52,6 +52,11 @@ public class MyTests
     }
 
     [Test]
+    public void PrintTest()
+    {
+        Assert.That(RunInterpreter("print(let x = 12 in x + let y = 42 in y);"), Is.EqualTo("54"));
+    }
+    [Test]
     public void Test1()
     {
         Assert.That(RunInterpreter("let x = 5 in print(x);"), Is.EqualTo("5"));
