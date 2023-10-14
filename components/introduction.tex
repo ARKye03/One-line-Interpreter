@@ -1,0 +1,29 @@
+% Define un comando para mostrar y copiar el texto
+\newcommand{\copiabletext}[2]{%
+    \href{#2}{\texttt{#1}}%
+}
+
+\begin{center}
+    \centering
+    \section{Introduccion}
+\end{center}
+Bienvenidos al manual de usuario de HULK, el lenguaje de programacion de la Universidad de la Habana. Este manual esta dividido en 5 secciones, cada una de ellas dedicada a una parte del interprete. En la primera seccion se explica como instalar el interprete, en la segunda seccion se explica como utilizar el interprete, en la tercera seccion se explica como utilizar el analizador lexico, en la cuarta seccion se explica como utilizar el analizador sintactico y en la quinta seccion se explica como utilizar el evaluador de expresiones.
+
+\subsection{Comienzo}
+    \begin{itemize}
+        \item Para comenzar a utilizar el interprete, se debe descargar el codigo fuente del interprete desde el repositorio de github del proyecto. Una vez descargado el codigo fuente, se debe ejecutar el proyecto usando el comando `dotnet run' desde una terminal abierta en la carpeta del proyecto.
+        \item Otra opcion es ejecutar el script el cual se encargara de todo.(Ver informe previo en \url{https://github.com/ARKye03/mini_kompiler.git})
+    \end{itemize}
+    
+\subsection{Resumen}
+    HULK (Havana University Language for Kompilers) es un lenguaje de programación didáctico, con seguridad de tipos, orientado a objetos e incremental, diseñado para el curso Introducción a los Compiladores de la carrera de Informática de la Universidad de La Habana.
+
+    Un simple `Hola mundo' en HULK se ve así:
+
+    \hbox{print(`Hola mundo');}
+
+    A vista de pájaro, HULK es un lenguaje de programación orientado a objetos, con herencia simple, polimorfismo y encapsulación a nivel de clase. Además, en HULK es posible definir funciones globales fuera del alcance de todas las clases. También es posible definir una única expresión global que constituya el punto de entrada al programa.
+
+    La mayoría de las construcciones sintácticas en HULK son expresiones, incluidas instrucciones condicionales y ciclos. HULK es un lenguaje de tipado estático con inferencia de tipos opcional, lo que significa que algunas (o todas) las partes de un programa se pueden anotar con tipos y el compilador verificará la coherencia de todas las operaciones.
+
+    Pero, en este caso, al ser un proyecto para estudiantes de 1er año, pues se simplifica un poco

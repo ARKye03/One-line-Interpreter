@@ -1,0 +1,23 @@
+\section{Analizador Lexico}
+
+\lstset{style=sharpc}
+\begin{lstlisting}
+    private object power()
+    {
+        var left = primary();
+
+        while (true)
+        {
+            var token = lexer.get_next_token();
+
+            if (token.type != TokenType.Operator || token.value != "^")
+            {
+                lexer.unget_token(token);
+                return left;
+            }
+            var right = primary();
+            left = BinaryOperation(left, token, right);
+        }
+    }
+\end{lstlisting}
+

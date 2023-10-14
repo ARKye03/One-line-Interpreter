@@ -1,0 +1,53 @@
+%Class
+\documentclass{article}
+
+%Preamble
+\usepackage{graphicx}
+\usepackage[left=2.5cm, right=2.5cm, top=2cm, bottom=3cm]{geometry}
+\usepackage{hyperref}
+\usepackage{enumerate}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstdefinestyle{sharpc}{
+    language=[Sharp]C,
+    frame=lr,
+    rulecolor=\color{blue!80!black},
+    keywordstyle=\color{blue},
+    commentstyle=\color{green!40!black},
+    stringstyle=\color{orange},
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=4
+}
+
+
+\title{HULK}
+\author{Rafael A. Sanchez Martinez \\ Universidad de la Habana \\ Grupo: C-113}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{assets/hulk_logo.jpeg}
+    \caption{Havana University Language for Kompilers}
+\end{figure}
+
+\newpage
+\input{components/introduction.tex}
+\newpage
+\input{components/lex.tex}
+\newpage
+\input{components/pars.tex}
+\newpage
+\input{components/eval.tex}
+\newpage
+\input{components/concls.tex}
+\newpage
+
+
+\end{document}
