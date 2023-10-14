@@ -4,25 +4,28 @@
 using System.Text.Json;
 
 namespace mini_compiler;
-//Here I handle the io, with the console user interface(c_ui).
+//Aqui manejo la entrada y salida del usuario
 public class c_ui
 {
+    #region Test
     public static void Test(string sourceCode)
     {
         // Run interpreter
         Interpreter interpreter = new(sourceCode!);
         interpreter.Run();
     }
+    #endregion
+    //Funcion principal que se encarga de la interfaz de usuario
     static void Main(string[] args)
     {
         if (SayBye())
             SayHello();
         while (true)
         {
-            // Read source code
+            // Lee el codigo fuente
             Console.Write("> ");
             string? sourceCode = Console.ReadLine();
-            // Source code is null or empty
+            // Si el codigo fuente es nulo, repetir
             if (string.IsNullOrEmpty(sourceCode))
             {
                 Console.WriteLine("Error: source code is null \nPress any key to repeat...");
@@ -33,19 +36,20 @@ public class c_ui
             {
                 switch (sourceCode)
                 {
-                    case "exit":
+                    // Comandos
+                    case "exit": // exit: salir del programa
                         return;
-                    case "clear":
+                    case "clear": // clear: limpiar la consola
                         Console.Clear();
                         continue;
-                    case "say_bye":
+                    case "say_bye": // say_bye: no mostrar el menu de bienvenida
                         settings.SetSayHello(false);
                         continue;
-                    case "say_hello":
+                    case "say_hello": // say_hello: mostrar el menu de bienvenida
                         settings.SetSayHello(true);
                         continue;
                 }
-                // Source code does not end with ';'
+                // Codigo fuente no termina con ';'
                 if (!sourceCode.EndsWith(";"))
                 {
                     Console.WriteLine($"Expected ';' at column {sourceCode.Length}.");
@@ -57,6 +61,8 @@ public class c_ui
             }
         }
     }
+    //Funcion que se encarga de mostrar el menu de bienvenida
+    #region SayHello
     private static void SayHello()
     {
         SayBye();
@@ -130,4 +136,5 @@ public class c_ui
             File.WriteAllText(".settings/settings.json", json);
         }
     }
+    #endregion
 }

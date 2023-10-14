@@ -49,9 +49,13 @@ public partial class Interpreter
         var substitutedExpression = SubstituteArgs(expressionTokens, argDict);
         return expression(substitutedExpression);
     }
+    // This substitute parameters for arguments
     private List<Token> SubstituteArgs(List<Token> tokens, Dictionary<string, object> argDict)
     {
+        // TODO: This is a very inefficient way of doing this, but it works for now
+        // I mean can be done better, I know how to do it, but I don't have the time to do it
         var substitutedTokens = new List<Token>();
+        //Adds the tokens to the list
         foreach (var token in tokens)
         {
             if (token.type == TokenType.Identifier && argDict.ContainsKey(token.value))
@@ -64,8 +68,11 @@ public partial class Interpreter
                 substitutedTokens.Add(token);
             }
         }
+        // Substitutes the tokens
         return substitutedTokens;
     }
+    // This is the equivalent to EvaluateFunction in other "projects" I guess
+    #region ExpressionOverride
     private object expression(List<Token> tokens)
     {
         var left = term(tokens);
@@ -246,54 +253,60 @@ public partial class Interpreter
             return null!;
         }
     }
+    #endregion
 }
 
 public partial class Lexer
 {
     private Token function_declaration()
     {
-        // Al encontrar 'function', esperamos el nombre de la función seguido de paréntesis.
-        advance(); // Avanzamos después de 'function'
-        skip_whitespace();
+        // Check that the next token is 'function'
+        // After 'function' we expect an identifier
+        advance(); // Advance to the next token
+        skip_whitespace(); // Skip all the whitespace characters until a non-whitespace character is found
 
         if (!char.IsLetter(current_char))
         {
+            // If the next character is not a letter, print an error
             Console.WriteLine($"Expected a function name at line {line} and column {column}");
         }
-
+        //Alloc? corresponding name
         string function_name = "";
+        // While non whitespace characters are found, append them to the function_name string
         while (current_char != '\0' && char.IsLetterOrDigit(current_char))
         {
             function_name += current_char;
             advance();
         }
-
         skip_whitespace();
         if (current_char != '(')
         {
+            // If the next character is not a '(', print an error
             Console.WriteLine($"Expected '(' after function name at line {line} and column {column}");
         }
 
-        // Analizar los parámetros de la función
+        // Check the parameters of the function
         List<string> parameters = new List<string>();
-        advance(); // Avanzar después del '('
+        advance();
         while (current_char != ')')
         {
             if (!char.IsLetter(current_char))
             {
+                // If the next character is not a letter, print an error
                 Console.WriteLine($"Expected a parameter name at line {line} and column {column}");
             }
 
             string parameter_name = "";
             while (current_char != '\0' && char.IsLetterOrDigit(current_char))
             {
+                // While non whitespace characters are found, append them to the parameter_name string
                 parameter_name += current_char;
                 advance();
             }
-
+            // Add the parameter name to the list of parameters
             parameters.Add(parameter_name);
             skip_whitespace();
-
+            // Multi parameter support
             if (current_char == ',')
             {
                 advance();
@@ -304,18 +317,20 @@ public partial class Lexer
         var nextToken = get_next_token();
         if (nextToken.type != TokenType.FLinq || nextToken.value != "=>")
         {
+            // If the next token is not '=>', print an error
             Console.WriteLine($"Expected '=>' after function parameters at line {line} and column {column}");
         }
-
-        // Analizar el cuerpo de la función como una expresión
+        // Analize the function body as an expression
         var expressionTokens = new List<Token>();
         nextToken = get_next_token();
+        // While the next token is not a semicolon, add the tokens to the expressionTokens list
+        // This gave a funny overflow once, ahh hilarious
         while (nextToken.type != TokenType.Semicolon && nextToken.type != TokenType.EOF)
         {
             expressionTokens.Add(nextToken);
             nextToken = get_next_token();
         }
-
+        // Return the function token, then it turns into a DFunction, that can be highly impproved, but for now, I need this to be like this, for me
         return new FunctionToken(TokenType.FunctionDeclaration, function_name, line, column, parameters, expressionTokens);
     }
 }

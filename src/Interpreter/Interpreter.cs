@@ -2,8 +2,8 @@ namespace mini_compiler;
 
 public partial class Interpreter
 {
-    public Lexer lexer;
-    public List<DFunction>? functions;
+    public Lexer lexer; // Lexer, to lex while parsing
+    public List<DFunction>? functions; // List of declared functions, to be used in the program
 
     public Interpreter(string sourceCode)
     {
@@ -17,103 +17,117 @@ public partial class Interpreter
     {
         functions = FunctionToken.functions;
         Token token;
-        //while ((token = lexer.get_next_token()).type != TokenType.EOF)
+        //while ((token = lexer.get_next_token()).type != TokenType.EOF) //Here to multiline idea 
         //{
         token = lexer.get_next_token();
         if (token.type == TokenType.PrintKeyword)
         {
-            // Analizar el contenido entre paréntesis y ejecutar la acción correspondiente
+            // Check the content between parenthesis and execute the corresponding action
             var nextToken = lexer.get_next_token();
             if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
             {
-                // Evaluar la expresión dentro del print y obtener el resultado
+                // Evaluate the expression inside the print and get the result
                 var expressionValue = expression();
 
-                // Verificar que se cierre el paréntesis
+                // Check that the parenthesis is closed
                 nextToken = lexer.get_next_token();
                 if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
                 {
+                    // If the parenthesis is not closed, print an error
                     Console.WriteLine($"Expected ')' after value inside print statement at line {nextToken.line} and column {nextToken.column}");
                 }
                 else
                 {
-                    // Imprimir el resultado de la expresión evaluada
+                    // Print the result of the evaluated expression
                     Console.WriteLine(expressionValue);
                 }
             }
             else
             {
+                // If the parenthesis is not opened, print an error
                 Console.WriteLine($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
             }
         }
-
+        //If a "let" is found
         else if (token.type == TokenType.LetKeyword)
         {
-            // Procesar la asignación de valores a variables
+            // Process the assignment of values to variables
             assignment();
         }
+        //If an If xd
         else if (token.type == TokenType.IfKeyword)
         {
-            // Procesar la instrucción condicional
+            // Process the conditional instruction
             Conditional();
         }
 
     }
-
+    // Variable assignment, this handles all vars
     private Dictionary<string, object> variables = new Dictionary<string, object>();
+
+    /// <summary>
+    /// This method analyzes and executes a statement based on the token type obtained from the lexer.
+    /// </summary>
+    // It's almost the most important here, it's the one that makes the magic happen
+    // So this one is called everytime a statement is found, and makes possible to run expressions inside expressions
     private void statement()
     {
+        // Get the next token
         var token = lexer.get_next_token();
-
+        // Check the type of the token
         if (token.type == TokenType.PrintKeyword)
         {
-            // Analizar el contenido entre paréntesis y ejecutar la acción correspondiente
+            // Check the content between parenthesis and execute the corresponding action
             var nextToken = lexer.get_next_token();
             if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
             {
-                // Evaluar la expresión dentro de 'print(...)'
+                // Evaluate whats in => 'print(...)'
                 var expressionValue = expression();
 
-                // Verificar que se cierre el paréntesis
+                // Verify that the parenthesis is closed
                 nextToken = lexer.get_next_token();
                 if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
                 {
+                    // If the parenthesis is not closed, print an error
                     Console.WriteLine($"Expected ')' after value inside print statement at line {nextToken.line} and column {nextToken.column}");
                 }
 
-                Console.WriteLine(expressionValue); // Imprimir el resultado
+                Console.WriteLine(expressionValue); // Print the result of the evaluated expression
             }
             else
             {
+                // If the parenthesis is not opened, print an error
                 Console.WriteLine($"Expected '(' after 'print' keyword at line {nextToken.line} and column {nextToken.column}");
             }
         }
+        // If a "let" is found
         else if (token.type == TokenType.LetKeyword)
         {
             assignment();
         }
+        // If an If xd again
         else if (token.type == TokenType.IfKeyword)
         {
             Conditional();
         }
-        // Agregar más lógica para otros tipos de instrucciones si es necesario
         else if (token.type == TokenType.EOF)
         {
-            return; // Fin del programa
+            return; // End of the show
         }
         else
         {
+            // If the token is not recognized, print an error
             Console.WriteLine($"Invalid statement at line {token.line} and column {token.column}");
         }
-        // Verificar si hay un punto y coma y avanzar al siguiente statement
-        token = lexer.get_next_token(); // Reutilizar la variable 'token'
+        // Verify if there is a semicolon and advance to the next statement
+        token = lexer.get_next_token(); // Re-use the token 
         if (token.type == TokenType.EOL)
         {
-            statement(); // Siguiente statement
+            statement(); // Next statement
         }
         else
         {
-            lexer.unget_token(token); // Devolver el token para que se analice en la siguiente iteración
+            lexer.unget_token(token); // Return the token to be analyzed in the next iteration
         }
     }
 }

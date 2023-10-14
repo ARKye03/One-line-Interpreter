@@ -115,5 +115,6 @@ public partial class Interpreter
     #endregion
     //Nothing
     #region FunctionKeywords
+    //Check fnizer.cs ;)
     #endregion
 }

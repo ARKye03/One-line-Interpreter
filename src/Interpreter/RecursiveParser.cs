@@ -1,6 +1,15 @@
 namespace mini_compiler;
 public partial class Interpreter
 {
+    /* Funcion que analiza sintaticamente expresiones y devuelve su valor
+     * term(), power() y primary() son funciones que analizan sintaticamente, respectivamente, terminos, potencias y primarios
+     * expression() es la funcion que analiza sintaticamente expresiones 
+     * Para el apartado de funciones, se utiliza una lista de funciones, ademas de estas mismas funciones pero sobrecargadas y adaptadas a otro ambiente
+     */
+    /// <summary>
+    /// Parses an expression and returns the result of the evaluation.
+    /// </summary>
+    /// <returns>The result of the evaluation.</returns>
     private object expression()
     {
         var left = term();
@@ -28,6 +37,10 @@ public partial class Interpreter
             }
         }
     }
+    /// <summary>
+    /// Parses and evaluates a term in the expression, which is a sequence of factors separated by multiplication, division, or modulo operators.
+    /// </summary>
+    /// <returns>The result of the evaluated term.</returns>
     private object term()
     {
         var left = power();
@@ -45,6 +58,10 @@ public partial class Interpreter
             left = BinaryOperation(left, token, right);
         }
     }
+    /// <summary>
+    /// Parses and evaluates power expressions.
+    /// </summary>
+    /// <returns>The result of the power expression.</returns>
     private object power()
     {
         var left = primary();
@@ -62,6 +79,10 @@ public partial class Interpreter
             left = BinaryOperation(left, token, right);
         }
     }
+    /// <summary>
+    /// Parses primary expressions in the input code.
+    /// </summary>
+    /// <returns>The parsed object.</returns>
     private object primary()
     {
         var token = lexer.get_next_token();

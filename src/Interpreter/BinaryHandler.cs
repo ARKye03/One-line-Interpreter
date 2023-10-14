@@ -2,6 +2,14 @@ namespace mini_compiler;
 
 public partial class Interpreter
 {
+    /// <summary>
+    /// Parses an expression and returns the result of the evaluation.
+    /// Actually, this is part "BinaryExpression", in other cases, but it just handles operations
+    /// </summary>
+    /// <param name="left"></param>
+    /// <param name="operatorToken"></param>
+    /// <param name="right"></param>
+    /// <returns>Evaluated operations</returns>
     private static object BinaryOperation(object left, Token operatorToken, object right)
     {
         if (operatorToken.type == TokenType.Operator)
@@ -106,6 +114,10 @@ public partial class Interpreter
             return null!;
         }
     }
+    /// <summary>
+    /// This is used for @ operator
+    /// </summary>
+    /// <returns>Concatenated strings or + numbers</returns>
     private static object ConcatenateValues(object left, object right)
     {
         // Si ambos valores son cadenas, concatenarlos y devolver el resultado

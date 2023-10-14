@@ -1,14 +1,17 @@
 namespace mini_compiler;
 
+/// <summary>
+/// The Lexer class is responsible for scanning the input source code and returning a stream of tokens that can be used by the Parser to build an Abstract Syntax Tree (AST).
+/// </summary>
 public partial class Lexer
 {
-    private string text;
-    private int pos;
-    private int line;
-    private int column;
-    private char current_char;
-    private List<Token> readTokens = new List<Token>();
-    public Lexer(string text)
+    private string text; // Contains the value of actual Token
+    private int pos; // Contains the position of the actual Token
+    private int line; // Contains the line of the actual Token
+    private int column; // Contains the column of the actual Token
+    private char current_char; // Contains the actual character
+    private List<Token> readTokens = new List<Token>(); // Contains the tokens that have been read but not yet consumed
+    public Lexer(string text) // Constructor
     {
         this.text = text;
         this.pos = 0;
@@ -16,6 +19,11 @@ public partial class Lexer
         this.column = 1;
         this.current_char = text[pos];
     }
+
+    /// <summary>
+    /// Recognizes and returns a token for a numeric value in the input stream.
+    /// </summary>
+    /// <returns>The token for the numeric value.</returns>
     private Token number()
     {
         string result = "";
@@ -46,6 +54,10 @@ public partial class Lexer
         // Devolver el token de número
         return new Token(TokenType.Number, result, line, column);
     }
+    /// <summary>
+    /// Scans and returns a token of type Identifier.
+    /// </summary>
+    /// <returns>The Identifier token.</returns>
     private Token identifier()
     {
         string result = "";
@@ -56,11 +68,19 @@ public partial class Lexer
         }
         return new Token(TokenType.Identifier, result, line, column);
     }
+    /// <summary>
+    /// Consumes the current character and returns a separator token.
+    /// </summary>
+    /// <returns>A separator token.</returns>
     private Token separator()
     {
         advance();
         return new Token(TokenType.Separator, "@", line, column);
     }
+    /// <summary>
+    /// Parses a string literal token.
+    /// </summary>
+    /// <returns>The parsed string literal token.</returns>
     private Token string_literal()
     {
         string result = "";
@@ -77,6 +97,10 @@ public partial class Lexer
         advance(); // Consume el segundo '"' para avanzar al siguiente token
         return new Token(TokenType.StringLiteral, result, line, column);
     }
+    /// <summary>
+    /// Scans the input string for a keyword and returns a token representing the keyword.
+    /// </summary>
+    /// <returns>A token representing the keyword found in the input string.</returns>
     private Token keyword()
     {
         string result = "";
@@ -108,7 +132,7 @@ public partial class Lexer
     /// <summary>
     /// Function that trash one token
     /// </summary>
-    /// <returns></returns>
+    /// <returns>None</returns>
     public void unget_token(Token token)
     {
         readTokens.Insert(0, token);
@@ -116,7 +140,7 @@ public partial class Lexer
     /// <summary>
     /// Function that advances one token when trying to parse and evaluate expressions
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Next token in the sourceCode</returns>
     public Token get_next_token()
     {
         if (readTokens.Count > 0)

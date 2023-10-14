@@ -1,7 +1,9 @@
 namespace mini_compiler;
 public partial class Lexer
 {
-    // This function advances the position of the lexer by one character and updates the current character accordingly.
+    /// <summary>
+    /// Advances the position of the lexer to the next character in the input text.
+    /// </summary>
     private void advance()
     {
         pos++;
@@ -15,7 +17,9 @@ public partial class Lexer
             current_char = text[pos];
         }
     }
-    // This function skips any whitespace characters in the input text by advancing the lexer until a non-whitespace character is found.
+    /// <summary>
+    /// Skips all whitespace characters until a non-whitespace character is found.
+    /// </summary>
     private void skip_whitespace()
     {
         while (current_char != '\0' && char.IsWhiteSpace(current_char))
@@ -23,7 +27,10 @@ public partial class Lexer
             advance();
         }
     }
-    // This function take a peek to the next token without getting it
+    /// <summary>
+    /// Returns the next character in the input string without consuming it.
+    /// </summary>
+    /// <returns>The next character in the input string, or '\0' if there are no more characters.</returns>
     private char peek()
     {
         var peek_pos = pos + 1;
