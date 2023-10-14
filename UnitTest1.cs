@@ -11,7 +11,7 @@ public class MyTests
     public void Func2()
     {
         Assert.That(RunInterpreter("function Pow(x,y) => x^y;"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(Pow(5,2));"), Is.EqualTo("25"));
+        Assert.That(RunInterpreter("print(Pow(2,5));"), Is.EqualTo("32"));
     }
     [Test]
     public void Func1()
