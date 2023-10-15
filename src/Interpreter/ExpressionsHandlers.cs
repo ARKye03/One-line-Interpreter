@@ -113,7 +113,81 @@ public partial class Interpreter
         }
     }
     #endregion
-    //Nothing
+    #region ConditionalOverload
+    private object RConditional()
+    {
+        var token = lexer.get_next_token();
+        if (token.type == TokenType.Punctuation && token.value == "(")
+        {
+            var leftValue = expression();
+            var comparisonToken = lexer.get_next_token();
+            if (comparisonToken.type != TokenType.ComparisonOperator)
+            {
+                Console.WriteLine($"Expected comparison operator after left-hand side of comparison in 'if' statement at line {comparisonToken.line} and column {comparisonToken.column}");
+                return null!;
+            }
+            var rightValue = expression();
+            var nextToken = lexer.get_next_token();
+            if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
+            {
+                Console.WriteLine($"Expected ')' after right-hand side of comparison in 'if' statement at line {nextToken.line} and column {nextToken.column}");
+                return null!;
+            }
+            var comparisonOperator = comparisonToken.value;
+            bool comparisonResult;
+            switch (comparisonOperator)
+            {
+                case "<":
+                    comparisonResult = (float)leftValue < (float)rightValue;
+                    break;
+                case ">":
+                    comparisonResult = (float)leftValue > (float)rightValue;
+                    break;
+                case "<=":
+                    comparisonResult = (float)leftValue <= (float)rightValue;
+                    break;
+                case ">=":
+                    comparisonResult = (float)leftValue >= (float)rightValue;
+                    break;
+                case "==":
+                    comparisonResult = leftValue.Equals(rightValue);
+                    break;
+                case "!=":
+                    comparisonResult = !leftValue.Equals(rightValue);
+                    break;
+                default:
+                    Console.WriteLine($"Invalid comparison operator '{comparisonOperator}' in 'if' statement at line {comparisonToken.line} and column {comparisonToken.column}");
+                    return null!;
+            }
+            if (comparisonResult)
+            {
+                return expression();
+            }
+            else
+            {
+                // Saltar al else
+                while (token.type != TokenType.ElseKeyword && token.type != TokenType.EOL)
+                {
+                    token = lexer.get_next_token();
+                }
+                if (token.type == TokenType.ElseKeyword)
+                {
+                    return expression();
+                }
+                else
+                {
+                    Console.WriteLine($"Expected 'else' keyword at line {token.line} and column {token.column}");
+                    return null!;
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Expected '(' after 'if' keyword at line {token.line} and column {token.column}");
+            return null!;
+        }
+    }
+    #endregion
     #region FunctionKeywords
     //Check fnizer.cs ;)
     #endregion

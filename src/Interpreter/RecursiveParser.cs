@@ -166,6 +166,10 @@ public partial class Interpreter
             var expressionValue = expression();
             return expressionValue;
         }
+        else if (token.type == TokenType.IfKeyword && token.value == "if")
+        {
+            return RConditional();
+        }
         else if (token.type == TokenType.Operator && token.value == "-")
         {
             var nextToken = lexer.get_next_token();
