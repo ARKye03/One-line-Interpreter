@@ -21,7 +21,7 @@ HULK (Havana University Language for Compilers) is an educational, type-safe, ob
 
 A simple `Hola Mundo' in HULK looks like this:
 
-    \hbox{print(`Hola mundo')}
+    \hbox{print{(`Hola mundo')}}
 
     From a bird's eye view, HULK is an object-oriented programming language, with simple inheritance, polymorphism, and class-level encapsulation. Additionally, in HULK it is possible to define global functions outside the scope of all classes. It is also possible to define a single global expression that constitutes the entry point to the program.
 
@@ -30,16 +30,16 @@ A simple `Hola Mundo' in HULK looks like this:
      But, in this case, since it is a project for 1st year students, it is a bit simplified.
      In this case, let's say, we have a one-line interpreter, which allow us, to evaluate expressions like:
      \begin{itemize}
-        \item Like I said above, \hbox{print(``Hello World'')}
+        \item Like I said above, \hbox{print{(``Hello World'')}}
             \begin{itemize}
                 \item Which is equivalent to \hbox{$print(``Hello'' + `` World'')$}
-                \item And \hbox{print(``Hello'' @ `` World'')}
+                \item And \hbox{print{(``Hello'' @ `` World'')}}
             \end{itemize}
         \item All basics `instructions' can handle simple math expressions like:
             \begin{itemize}
                 \item $``2 \pm  5;''$ || $``147.6 \pm  -63;''$
                 \item $``8 \times  2;''$ || $``200 \div 3;''$
-                \item $``2^{64};''$ || $``sqrt(3969)'' \rightarrow  ``\sqrt{3969}''$ || $``\log({ 10});''$
+                \item $``2^{64};''$ || $``sqrt(3969)'' \rightarrow  ``\sqrt{3969}''$ || $``\log(2, 10);''$
                 \item Simple functions to handle trigonometrics expressions.
                     \begin{itemize}
                         \item $``\sin({\pi})''$ 
@@ -50,4 +50,54 @@ A simple `Hola Mundo' in HULK looks like this:
                     \end{itemize}
                 \item And thats pretty much it $\land\times \land$ 
             \end{itemize}
+        \newpage
+        \item Evaluable expressions are:
+            \begin{itemize}
+                \item Printing:
+                    \begin{description}
+                    \item[] This expression keyword receives another expressions as argument, and evaluates it, and print the returned value
+                    \item[] $print(55)$; shows 55 || $print(``Kitty'')$; shows Kitty
+                    \end{description}
+                \item Variables:
+                    \begin{description}
+                        \item[] This one, contains two important keywords, ``LetKeyword'' and ``InKeyword''.
+                        \item[] A basic let-in expression is: ``let $<var\_name>$ in $<statement>$''
+                        \item[] Example: ``let x = ${(63 \pm 109)}^2$ in $print(x)$; ''
+                    \end{description}
+                \item Conditions:
+                    \begin{description}
+                        \item[] Basic and classic conditions:
+                        \item[] if (condition) $<do\_if\_true>$ else $<do\_if\_false>$
+                        \item[] ``if (1024 \% 2 == 0) $print(``Even'')$ else $print(``Odd'')$; ''
+                    \end{description}
+                \item Functions:
+                    \begin{itemize}
+                        \item Declare functions:
+                        \begin{description}
+                            \item[] To declare functions simple do:
+                            \item[] function $function\_name${(arguments)} $=>$ $<statement>$;
+                            \item[] Example: function Pow$(x,y)$ $=>$ $x^y$;
+                            \item[] This can be used like:
+                            \item[] ``let number = $Pow(2,5)$ in $print(number)$; ''
+                        \end{description}
+                    \end{itemize}
+                \item Note: A statement is basically another instruction or expression.
+            \end{itemize}
+        \item Some expressions can be:
+            \begin{enumerate}
+                \item print{(``Hello World'')};
+                \item print{(($({(1 + 2)} ^ 3)$ * 4) / 5)};
+                \item print{($\sin{(2 * PI)}^2$ + $\cos(3 * PI / \log(4, 64))$)};
+                \item function $\tan{(x)}$ $=>$ $\sin{(x)}$ / $\cos{(x)}$;
+                \item let x = PI/2 in $print(\tan(x)$);
+                \item let number = 42, text = ``The meaning of life is'' in print{(text @ number)};
+                    \begin{itemize}
+                        \item let number = 42 in (let text = ``The meaning of life is'' in (print$(text \ @ \ number)$));
+                    \end{itemize}
+                \item print$(7 + (let \ x = 2 \ in \ x * x))$;
+                \item let a = 42 in if (a \% 2 == 0) print$(``Even'')$ else print$(``odd'')$;
+                \item let a = 42 in print$(if \ (a \ \% \ 2 == 0)$ ``even'' else ``odd'');
+                \item function fib$(n)$ $=>$ if (n $>$ 1) fib$(n-1)$ + fib$(n-2)$ else 1;
+            \end{enumerate}
+        \item And on and on, use your imagination, except if you are my programming teacher, please don't get creative, I beg you.
      \end{itemize}
