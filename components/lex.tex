@@ -1,23 +1,116 @@
-\section{Lexer}
+\begin{center}
+    \centering
+    \section{Lexer}
+\end{center}
+
+\subsection{Lexer Summary}
+
+A Lexer, also known as a lexical analyzer, tokenizer, or scanner, is a program or function that breaks down input code into a sequence of tokens. These tokens are meaningful units of code. 
+
+In the process of parsing programming languages, this task is traditionally split up into two phases: the lexing stage and the parsing stage. The lexer's job is simpler than the parser's. It turns the meaningless string into a flat list of things like ``number literal'', ``string literal'', ``identifier'', or ``operator''. It can also recognize reserved identifiers (``keywords'') and discard whitespace. 
+
+The output of the lexer is used as the input for the parser. The parser then has the much harder job of turning the stream of ``tokens'' produced by the lexer into a parse tree representing the structure of the parsed language. This separation allows the lexer to do its job well and for the parser to work on a simpler, more meaningful input than the raw text.
+
+More info about:
+\begin{itemize}
+    \item \href{https://dev.to/cad97/what-is-a-lexer-anyway-4kdo}{What's a Lexer}
+    \item \href{https://accu.org/journals/overload/26/145/balaam_2510/}{The Lexer - ACCU}
+    \item \href{https://www.programmingassignmenthelper.com/blog/lexer-and-parser-in-c/}{Extra blog}
+\end{itemize}
 
 \lstset{style=sharpc}
-\begin{lstlisting}
-    private object power()
-    {
-        var left = primary();
-
-        while (true)
+\subsection{Now, my Lexer}
+    First I've defined some simple Token types in this ``enum'':
+    \begin{lstlisting}
+        public enum TokenType
         {
-            var token = lexer.get_next_token();
+            FLinq, //Link token for function declaration
+            ComparisonOperator,
+            Number, // Number
+            StringLiteral, // Literally a string
+            FunctionDeclaration, // Well, deprecated
+            LetKeyword, 
+            IfKeyword, 
+            ElseKeyword, 
+            PrintKeyword, 
+            InKeyword,
+            FunctionKeyword,
+            Operator, // '+','-','*','/','^', '='...
+            Punctuation, // '(',')' & ','
+            Identifier, //Used for variables name and functions value
+            EOL, //';'
+            EOF, //Not yet
+            Semicolon, //Idk man/woman
+            Separator // '@', and in a future, "||", "&&"...
+        }
+    \end{lstlisting}
+    Basically, my Tokens, have a few properties:
+    \begin{lstlisting}
+        public TokenType type; // From enum
+        public string value; // Text of the token
+        public int line; // Line position, currently 1, always
+        public int column; // Column position
+    \end{lstlisting}
+    \texttt{Note:} ToString override is there to test tokens only.
 
-            if (token.type != TokenType.Operator || token.value != "^")
-            {
-                lexer.unget_token(token);
-                return left;
-            }
-            var right = primary();
-            left = BinaryOperation(left, token, right);
+    \newpage
+    \begin{center}
+        \centering
+        Some functions of my lexer
+    \end{center}
+\begin{itemize}
+    \item One char to the right:
+    \begin{lstlisting}
+    private void advance()
+    {
+        pos++;
+        column++;
+        if (pos > text.Length - 1)
+        {
+            current_char = '\0';
+        }
+        else
+        {
+            current_char = text[pos];
         }
     }
-\end{lstlisting}
+    \end{lstlisting}
+    \item Jumps to next non-blank char:
+    \begin{lstlisting}
+    private void skip_whitespace()
+    {
+        while (current_char != '\0' && char.IsWhiteSpace(current_char))
+        {
+            advance();
+        }
+    }
+    \end{lstlisting}
+    \item Takes a look to next token, without taking it:
+    \begin{lstlisting}
+    private char peek()
+    {
+        var peek_pos = pos + 1;
+        if (peek_pos >= text.Length)
+        {
+            return '\0';
+        }
+        else
+        {
+            return text[peek_pos];
+        }
+    }
+    \end{lstlisting}
+    \item Drop a token to be used later:
+    \begin{lstlisting}
+    public void unget_token(Token token)
+    {
+        readTokens.Insert(0, token);
+    }
+    \end{lstlisting}
+\end{itemize}
 
+\begin{center}
+    \centering
+    The main function
+\end{center}
+The \hbox{get\_next\_token{()}} method it's actually a little bit big, it used several times in the `Interpreter' itself, since it is in charge of tokenizing/lexing the expression as it is parsed.
