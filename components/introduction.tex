@@ -7,23 +7,47 @@
     \centering
     \section{Introduccion}
 \end{center}
-Bienvenidos al manual de usuario de HULK, el lenguaje de programacion de la Universidad de la Habana. Este manual esta dividido en 5 secciones, cada una de ellas dedicada a una parte del interprete. En la primera seccion se explica como instalar el interprete, en la segunda seccion se explica como utilizar el interprete, en la tercera seccion se explica como utilizar el analizador lexico, en la cuarta seccion se explica como utilizar el analizador sintactico y en la quinta seccion se explica como utilizar el evaluador de expresiones.
+Welcome to the user manual of HULK, the programming language of the University of Havana. This manual is divided into 5 sections, each one dedicated to a part of the interpreter. The first section explains how to install the interpreter, the second section explains how to use the interpreter, the third section explains how to use the lexical analyzer, the fourth section explains how to use the syntax analyzer and the fifth section Explains how to use the expression evaluator.
 
-\subsection{Comienzo}
+\subsection{Start}
     \begin{itemize}
-        \item Para comenzar a utilizar el interprete, se debe descargar el codigo fuente del interprete desde el repositorio de github del proyecto. Una vez descargado el codigo fuente, se debe ejecutar el proyecto usando el comando `dotnet run' desde una terminal abierta en la carpeta del proyecto.
-        \item Otra opcion es ejecutar el script el cual se encargara de todo.(Ver informe previo en \url{https://github.com/ARKye03/mini_kompiler.git})
+        \item To start using the interpreter, you must download the source code of the interpreter from the project's github repository. Once the source code has been downloaded, the project must be run using the `dotnet run' command from a terminal open in the project folder.
+        \item Another option is to run the script which will take care of everything
+        \item See previous report in \url{https://github.com/ARKye03/mini_kompiler.git}
     \end{itemize}
     
-\subsection{Resumen}
-    HULK (Havana University Language for Kompilers) es un lenguaje de programación didáctico, con seguridad de tipos, orientado a objetos e incremental, diseñado para el curso Introducción a los Compiladores de la carrera de Informática de la Universidad de La Habana.
+\subsection{Summary}
+HULK (Havana University Language for Compilers) is an educational, type-safe, object-oriented and incremental programming language, designed for the Introduction to Compilers course of the Computer Science degree at the University of Havana.
 
-    Un simple `Hola mundo' en HULK se ve así:
+A simple `Hola Mundo' in HULK looks like this:
 
-    \hbox{print(`Hola mundo');}
+    \hbox{print(`Hola mundo')}
 
-    A vista de pájaro, HULK es un lenguaje de programación orientado a objetos, con herencia simple, polimorfismo y encapsulación a nivel de clase. Además, en HULK es posible definir funciones globales fuera del alcance de todas las clases. También es posible definir una única expresión global que constituya el punto de entrada al programa.
+    From a bird's eye view, HULK is an object-oriented programming language, with simple inheritance, polymorphism, and class-level encapsulation. Additionally, in HULK it is possible to define global functions outside the scope of all classes. It is also possible to define a single global expression that constitutes the entry point to the program.
 
-    La mayoría de las construcciones sintácticas en HULK son expresiones, incluidas instrucciones condicionales y ciclos. HULK es un lenguaje de tipado estático con inferencia de tipos opcional, lo que significa que algunas (o todas) las partes de un programa se pueden anotar con tipos y el compilador verificará la coherencia de todas las operaciones.
+    Most syntactic constructs in HULK are expressions, including conditional statements and loops. HULK is a statically typed language with optional type inference, meaning that some (or all) parts of a program can be annotated with types and the compiler will check all operations for consistency.
 
-    Pero, en este caso, al ser un proyecto para estudiantes de 1er año, pues se simplifica un poco
+     But, in this case, since it is a project for 1st year students, it is a bit simplified.
+     In this case, let's say, we have a one-line interpreter, which allow us, to evaluate expressions like:
+     \begin{itemize}
+        \item Like I said above, \hbox{print(``Hello World'')}
+            \begin{itemize}
+                \item Which is equivalent to \hbox{$print(``Hello'' + `` World'')$}
+                \item And \hbox{print(``Hello'' @ `` World'')}
+            \end{itemize}
+        \item All basics `instructions' can handle simple math expressions like:
+            \begin{itemize}
+                \item $``2 \pm  5;''$ || $``147.6 \pm  -63;''$
+                \item $``8 \times  2;''$ || $``200 \div 3;''$
+                \item $``2^{64};''$ || $``sqrt(3969)'' \rightarrow  ``\sqrt{3969}''$ || $``\log({ 10});''$
+                \item Simple functions to handle trigonometrics expressions.
+                    \begin{itemize}
+                        \item $``\sin({\pi})''$ 
+                        \item $``\cos({\pi})''$
+                        \item $``\tan({\pi})''$
+                        \item $``\cot({\pi})''$
+                        \item Others can be defined on the way too.
+                    \end{itemize}
+                \item And thats pretty much it $\land\times \land$ 
+            \end{itemize}
+     \end{itemize}
