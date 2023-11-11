@@ -39,6 +39,9 @@ public class c_ui
                     // Comandos
                     case "exit": // exit: salir del programa
                         return;
+                    case "info":
+                        FunctionsInfo();
+                        continue;
                     case "clear": // clear: limpiar la consola
                         Console.Clear();
                         continue;
@@ -61,6 +64,38 @@ public class c_ui
             }
         }
     }
+
+    private static void FunctionsInfo()
+    {
+        List<string> functionDescriptions = new List<string>
+        {
+            "Sin(x):    | Returns the sine of x, where x is in radians.            | Example: Sin(0) returns 0.",
+            "Cos(x):    | Returns the cosine of x, where x is in radians.          | Example: Cos(0) returns 1.",
+            "Tan(x):    | Returns the tangent of x, where x is in radians.         | Example: Tan(0) returns 0.",
+            "Log(x):    | Returns the natural logarithm (base e) of x.             | Example: Log(1) returns 0.",
+            "Ln(x):     | Returns the natural logarithm (base e) of x.             | Example: Ln(1) returns 0.",
+            "Sqrt(x):   | Returns the square root of x.                            | Example: Sqrt(4) returns 2.",
+            "Abs(x):    | Returns the absolute value of x.                         | Example: Abs(-5) returns 5.",
+            "Pow(x, y): | Returns x raised to the power of y.                      | Example: Pow(2, 3) returns 8.",
+            "Exp(x):    | Returns e raised to the power of x.                      | Example: Exp(1) returns approximately 2.71828.",
+            "Floor(x):  | Returns the largest integer less than or equal to x.     | Example: Floor(1.5) returns 1.",
+            "Ceil(x):   | Returns the smallest integer greater than or equal to x. | Example: Ceil(1.5) returns 2.",
+            "Round(x):  | Rounds x to the nearest integer.                         | Example: Round(1.5) returns 2.",
+            "Rand(min, max): Returns a random integer between min (inclusive) and max (exclusive). \n\t - Example: Rand(10, 20) returns a random number between 10 and 20."
+        };
+
+        foreach (string description in functionDescriptions)
+        {
+            string[] parts = description.Split(new[] { ':' }, 2); // Split the description into two parts at the first colon
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write(parts[0]); // Print the function name in red
+
+            Console.ResetColor();
+            Console.WriteLine(parts.Length > 1 ? ":" + parts[1] : ""); // Print the rest of the description in the default color
+        }
+    }
+
     //Funcion que se encarga de mostrar el menu de bienvenida
     #region SayHello
     private static void SayHello()

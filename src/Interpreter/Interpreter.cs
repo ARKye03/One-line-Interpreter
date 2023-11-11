@@ -6,6 +6,10 @@ public partial class Interpreter
 {
     public Lexer lexer; // Lexer, to lex while parsing
     public List<DFunction>? functions; // List of declarable functions, to be used in the program
+
+    /// <summary>
+    /// Represents a list of built-in mathematical functions used by the interpreter.
+    /// </summary>
     public List<Functions> functions2 = new List<Functions>
     {
         new Functions("Sin", 1, args => Math.Sin(Convert.ToSingle(args[0]))),
