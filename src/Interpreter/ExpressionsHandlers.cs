@@ -161,9 +161,23 @@ public partial class Interpreter
             }
             if (comparisonResult)
             {
-                return expression();
+                var result = expression();
+                // Skip the else block
+                while (true)
+                {
+                    token = lexer.get_next_token();
+                    if (token.type == TokenType.InKeyword)
+                    {
+                        lexer.unget_token(token); // Put the InKeyword back into the lexer
+                        break;
+                    }
+                    else if (token.type == TokenType.EOL)
+                    {
+                        break;
+                    }
+                }
+                return result;
             }
-            else
             {
                 // Saltar al else
                 while (token.type != TokenType.ElseKeyword && token.type != TokenType.EOL)

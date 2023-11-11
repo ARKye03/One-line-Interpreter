@@ -4,7 +4,7 @@
 using System.Text.Json;
 
 namespace mini_compiler;
-//Aqui manejo la entrada y salida del usuario
+//Here I handle the IO of the user
 public class c_ui
 {
     #region Test

@@ -110,6 +110,10 @@ public partial class Interpreter
         {
             Conditional();
         }
+        else if (token.type == TokenType.Identifier || token.type == TokenType.Number)
+        {
+            //Do nothing
+        }
         else if (token.type == TokenType.EOF)
         {
             return; // End of the show

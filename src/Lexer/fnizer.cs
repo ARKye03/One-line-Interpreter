@@ -21,6 +21,7 @@ public class DFunction
     public DFunction(List<Token> expression, string value, List<string> parameters, TokenType type)
     {
         this.expression = expression;
+        expression.Add(new Token(TokenType.EOL, ";", 0, 0));
         this.value = value;
         this.parameters = parameters;
         this.type = type;
@@ -236,6 +237,10 @@ public partial class Interpreter
             var expressionValue = expression(tokens);
             return expressionValue;
         }
+        else if (token.type == TokenType.IfKeyword)
+        {
+            return RConditional(tokens);
+        }
         else if (token.type == TokenType.Operator && token.value == "-")
         {
             var nextToken = tokens[0];
@@ -250,6 +255,136 @@ public partial class Interpreter
         else
         {
             Console.WriteLine($"Invalid expression at line {token.line} and column {token.column}");
+            return null!;
+        }
+    }
+    #endregion
+    #region RConditionalOverload
+    private object RConditional(List<Token> tokens)
+    {
+        var token = tokens[0];
+        tokens.RemoveAt(0);
+        if (token.type == TokenType.Punctuation && token.value == "(")
+        {
+            var leftValue = expression(tokens);
+            var comparisonToken = tokens[0];
+            tokens.RemoveAt(0);
+            if (comparisonToken.type != TokenType.ComparisonOperator)
+            {
+                Console.WriteLine($"Expected comparison operator after left-hand side of comparison in 'if' statement at line {comparisonToken.line} and column {comparisonToken.column}");
+                return null!;
+            }
+            var rightValue = expression(tokens);
+            var nextToken = tokens[0];
+            tokens.RemoveAt(0);
+            if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
+            {
+                Console.WriteLine($"Expected ')' after right-hand side of comparison in 'if' statement at line {nextToken.line} and column {nextToken.column}");
+                return null!;
+            }
+            var comparisonOperator = comparisonToken.value;
+            bool comparisonResult;
+            switch (comparisonOperator)
+            {
+                case "<":
+                    comparisonResult = (float)leftValue < (float)rightValue;
+                    break;
+                case ">":
+                    comparisonResult = (float)leftValue > (float)rightValue;
+                    break;
+                case "<=":
+                    comparisonResult = (float)leftValue <= (float)rightValue;
+                    break;
+                case ">=":
+                    comparisonResult = (float)leftValue >= (float)rightValue;
+                    break;
+                case "==":
+                    comparisonResult = leftValue.Equals(rightValue);
+                    break;
+                case "!=":
+                    comparisonResult = !leftValue.Equals(rightValue);
+                    break;
+                default:
+                    Console.WriteLine($"Invalid comparison operator '{comparisonOperator}' in 'if' statement at line {comparisonToken.line} and column {comparisonToken.column}");
+                    return null!;
+            }
+            if (comparisonResult)
+            {
+                var result = expression(tokens);
+                // Skip the else block
+                while (true)
+                {
+                    token = tokens[0];
+                    tokens.RemoveAt(0);
+                    if (token.type == TokenType.InKeyword)
+                    {
+                        tokens.Insert(0, token); // Put the InKeyword back into the tokens
+                        break;
+                    }
+                    else if (token.type == TokenType.EOL)
+                    {
+                        break;
+                    }
+                }
+                return result;
+            }
+            else
+            {
+                // Skip to the else
+                while (token.type != TokenType.ElseKeyword && token.type != TokenType.EOL)
+                {
+                    token = tokens[0];
+                    tokens.RemoveAt(0);
+                }
+                if (token.type == TokenType.ElseKeyword)
+                {
+                    return expression(tokens);
+                }
+                else
+                {
+                    Console.WriteLine($"Expected 'else' keyword at line {token.line} and column {token.column}");
+                    return null!;
+                }
+            }
+        }
+        else if (token.type == TokenType.Identifier)
+        {
+            var function = functions?.Find(func => func.value == token.value);
+            if (function != null)
+            {
+                List<object> args = new();
+                var nextToken = tokens[0];
+                tokens.RemoveAt(0);
+                if (nextToken.value != "(" || nextToken.type != TokenType.Punctuation)
+                {
+                    Console.WriteLine($"Expected \"(\" after function name at {nextToken.column}");
+                }
+                while (tokens.Count > 0)
+                {
+                    var arg = expression(tokens);
+                    args.Add(arg);
+                    var delimiterToken = tokens[0];
+                    tokens.RemoveAt(0);
+                    if (delimiterToken.value == ")")
+                    {
+                        break;
+                    }
+                    else if (delimiterToken.value != "," || delimiterToken.type != TokenType.Punctuation)
+                    {
+                        Console.WriteLine($"Expected \",\" or \")\" after function argument at {delimiterToken.column}");
+                    }
+                }
+                return EvaFurras(function, args);
+            }
+            else
+            {
+                Console.WriteLine($"Undefined function '{token.value}' at line {token.line} and column {token.column}");
+                return null!;
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Expected '(' or function name after 'if' keyword at line {token.line} and column {token.column}");
             return null!;
         }
     }
