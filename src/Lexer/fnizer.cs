@@ -1,4 +1,18 @@
+
 namespace mini_compiler;
+
+public class Functions
+{
+    public string Name { get; }
+    public int Parameters { get; }
+    public Func<List<object>, object> Implementation { get; }
+    public Functions(string name, int parameters, Func<List<object>, object> implementation)
+    {
+        Name = name;
+        Parameters = parameters;
+        Implementation = implementation;
+    }
+}
 public class FunctionToken : Token
 {
     public static List<DFunction> functions = new();

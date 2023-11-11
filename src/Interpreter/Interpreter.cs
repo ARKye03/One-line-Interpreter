@@ -1,10 +1,41 @@
+using System.Numerics;
+
 namespace mini_compiler;
 
 public partial class Interpreter
 {
     public Lexer lexer; // Lexer, to lex while parsing
-    public List<DFunction>? functions; // List of declared functions, to be used in the program
+    public List<DFunction>? functions; // List of declarable functions, to be used in the program
+    public List<Functions> functions2 = new List<Functions>
+    {
+        new Functions("Sin", 1, args => Math.Sin(Convert.ToSingle(args[0]))),
+        new Functions("Cos", 1, args => Math.Cos(Convert.ToSingle(args[0]))),
+        new Functions("Tan", 1, args => Math.Tan(Convert.ToSingle(args[0]))),
+        new Functions("Log", 1, args => Math.Log(Convert.ToSingle(args[0]))),
+        new Functions("Ln", 1, args => Math.Log(Convert.ToSingle(args[0]), Math.E)),
+        new Functions("Sqrt", 1, args => Math.Sqrt(Convert.ToSingle(args[0]))),
+        new Functions("Abs", 1, args => Math.Abs(Convert.ToSingle(args[0]))),
+        new Functions("Pow", 2, args => Math.Pow(Convert.ToSingle(args[0]), Convert.ToSingle(args[1]))),
+        new Functions("Exp", 1, args => Math.Exp(Convert.ToSingle(args[0]))),
+        new Functions("Floor", 1, args => Math.Floor(Convert.ToSingle(args[0]))),
+        new Functions("Ceil", 1, args => Math.Ceiling(Convert.ToSingle(args[0]))),
+        new Functions("Round", 1, args => Math.Round(Convert.ToSingle(args[0]))),
+        new Functions("Rand", 2, args =>
+        {
+            int min = Convert.ToInt32(args[0]);
+            int max = Convert.ToInt32(args[1]);
+            return new Random().Next(min, max);
+        })
+    };
 
+
+
+
+    /// <summary>
+    /// Constructor of the interpreter
+    /// </summary>
+    /// <param name="sourceCode">The source code to be interpreted</param>
+    /// <returns> The interpreter object </returns>
     public Interpreter(string sourceCode)
     {
         lexer = new Lexer(sourceCode);

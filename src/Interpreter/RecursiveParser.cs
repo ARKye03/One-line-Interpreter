@@ -112,6 +112,32 @@ public partial class Interpreter
             }
             return EvaFurras(function, args);
         }
+        var functionx = functions2?.Find(func => func.Name == token.value);
+        if (functionx != null)
+        {
+            List<object> args = new();
+            var nextToken = lexer.get_next_token();
+            if (nextToken.value != "(" || nextToken.type != TokenType.Punctuation)
+            {
+                Console.WriteLine($"Expected \"(\" after function name at {nextToken.column}");
+            }
+            while (true)
+            {
+                var arg = expression();
+                args.Add(arg);
+                var delimiterToken = lexer.get_next_token();
+                if (delimiterToken.value == ")")
+                {
+                    break;
+                }
+                else if (delimiterToken.value != "," || delimiterToken.type != TokenType.Punctuation)
+                {
+                    Console.WriteLine($"Expected \",\" or \")\" after function argument at {delimiterToken.column}");
+                }
+            }
+            // Call the function with the arguments
+            return functionx.Implementation(args);
+        }
 
         if (token.type == TokenType.Number)
         {
