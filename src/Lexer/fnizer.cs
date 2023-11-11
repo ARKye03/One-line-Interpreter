@@ -193,7 +193,33 @@ public partial class Interpreter
             }
             return EvaFurras(function, args);
         }
-
+        var function2 = functions2?.Find(func => func.Name == token.value);
+        if (function2 != null)
+        {
+            List<object> args = new();
+            var nextToken = tokens[0];
+            tokens.RemoveAt(0);
+            if (nextToken.value != "(" || nextToken.type != TokenType.Punctuation)
+            {
+                Console.WriteLine($"Expected \"(\" after function name at {nextToken.column}");
+            }
+            while (tokens.Count > 0)
+            {
+                var arg = expression(tokens);
+                args.Add(arg);
+                var delimiterToken = tokens[0];
+                tokens.RemoveAt(0);
+                if (delimiterToken.value == ")")
+                {
+                    break;
+                }
+                else if (delimiterToken.value != "," || delimiterToken.type != TokenType.Punctuation)
+                {
+                    Console.WriteLine($"Expected \",\" or \")\" after function argument at {delimiterToken.column}");
+                }
+            }
+            return function2.Implementation(args);
+        }
         if (token.type == TokenType.Number)
         {
             return float.Parse(token.value);
@@ -407,6 +433,10 @@ public partial class Interpreter
 
 public partial class Lexer
 {
+    /// <summary>
+    /// Process the assignment of declarable? functions and add them to the list of functions
+    /// </summary>
+    /// <returns> DFunction </returns>
     private Token function_declaration()
     {
         // Check that the next token is 'function'
