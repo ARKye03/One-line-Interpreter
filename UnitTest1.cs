@@ -103,7 +103,8 @@ public class MainTests
     [Test]
     public void Pow()
     {
-        Assert.That(RunInterpreter("print(Pow(2,2));"), Is.EqualTo("4"));
+        Assert.That(RunInterpreter("function pow(x,y) => Pow(x,y);"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(pow(2,3));"), Is.EqualTo("8"));
     }
     [Test]
     public void Fib()
