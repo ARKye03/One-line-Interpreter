@@ -32,13 +32,6 @@ Using curl:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ARKye03/scripts/main/%5Bsh%5D%20mini_kompiler/install.sh)"
 ```
 
-Then:
-
-```shell
-cd mini_kompiler/
-dotnet run
-```
-
 ### Clone install
 
 ```shell
