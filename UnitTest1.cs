@@ -6,6 +6,40 @@ namespace mini_compiler.test;
 [TestFixture]
 public class MyTests
 {
+    [Test]
+    public void Fib()
+    {
+        Assert.That(RunInterpreter("function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(fib(5));"), Is.EqualTo("8"));
+    }
+    [Test]
+    public void MCD_Condition_Function_True()
+    {
+        Assert.That(RunInterpreter("function mcd(x,y) => if (x % y != 0) \"No\" else \"Yes\";"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(mcd(54,5));"), Is.EqualTo("No"));
+    }
+    [Test]
+    public void MCD_Condition_Function()
+    {
+        Assert.That(RunInterpreter("function mcd(x,y) => if (x % y != 0) \"No\" else \"Yes\";"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(mcd(55,5));"), Is.EqualTo("Yes"));
+    }
+    [Test]
+    public void LetAssignConditionTrue()
+    {
+        Assert.That(RunInterpreter("let x = if (4 < 5) 6 else 2 in print(x);"), Is.EqualTo("6"));
+    }
+
+    [Test]
+    public void LetDt()
+    {
+        Assert.That(RunInterpreter("let x = 5 in 2;"), Is.EqualTo(""));
+    }
+    [Test]
+    public void LetAssignConditionFalse()
+    {
+        Assert.That(RunInterpreter("let x = if (6 < 5) 6 else 2 in print(x);"), Is.EqualTo("2"));
+    }
 
     [Test]
     public void Func2()
@@ -16,8 +50,8 @@ public class MyTests
     [Test]
     public void Func1()
     {
-        Assert.That(RunInterpreter("function Pow(x,y) => x^y;"), Is.EqualTo(""));
-        //Assert.That(RunInterpreter("print(Pow(5,2));"), Is.EqualTo("25"));
+        Assert.That(RunInterpreter("function Sum(x,y) => x+y;"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print((Sum(5,2) + Sum(2,2))^2);"), Is.EqualTo("121"));
     }
 
     [Test]
