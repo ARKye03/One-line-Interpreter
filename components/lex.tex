@@ -59,58 +59,18 @@ More info about:
         Some functions of my lexer
     \end{center}
 \begin{itemize}
-    \item One char to the right:
-    \begin{lstlisting}
-    private void advance()
-    {
-        pos++;
-        column++;
-        if (pos > text.Length - 1)
-        {
-            current_char = '\0';
-        }
-        else
-        {
-            current_char = text[pos];
-        }
-    }
-    \end{lstlisting}
-    \item Jumps to next non-blank char:
-    \begin{lstlisting}
-    private void skip_whitespace()
-    {
-        while (current_char != '\0' && char.IsWhiteSpace(current_char))
-        {
-            advance();
-        }
-    }
-    \end{lstlisting}
-    \item Takes a look to next token, without taking it:
-    \begin{lstlisting}
-    private char peek()
-    {
-        var peek_pos = pos + 1;
-        if (peek_pos >= text.Length)
-        {
-            return '\0';
-        }
-        else
-        {
-            return text[peek_pos];
-        }
-    }
-    \end{lstlisting}
-    \item Drop a token to be used later:
-    \begin{lstlisting}
-    public void unget_token(Token token)
-    {
-        readTokens.Insert(0, token);
-    }
-    \end{lstlisting}
+    \item advance{()}: One char to the right.
+    \item skip\_whitespace{()}: Jumps to next non-blank char.
+    \item peek{()}: Takes a look to next token, without taking it.
+    \item unget\_token{()}: Drops next token, to use it later.
+    \item Some Token functions. Take a summary along the code itself
 \end{itemize}
 
 \begin{center}
     \centering
     The main function
 \end{center}
-The \hbox{get\_next\_token{()}} method it's actually a little bit big, it used several times in the `Interpreter' itself, since it is in charge of tokenizing/lexing the expression as it is parsed.
+
+The \hbox{get\_next\_token{()}} method it's actually a little bit big, it is used several times in the `Interpreter' itself, since it is in charge of tokenizing/lexing the expression as it is parsed.
+
+The \hbox{function\_declaration{()}}: method, present in fnizer.cs, is in charge of declare all user functions, and add them to a list, that the parser, later, will use in case some functions get invoked?
