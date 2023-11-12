@@ -1,2 +1,115 @@
-\section{Interpreter}
+\begin{center}
+    \centering
+    \section{Interpreter}
+\end{center}
 
+\subsection{Parser}
+
+A parser is a program or a component of a program that analyzes a string of symbols according to a set of rules. A parser can be used for different purposes, such as understanding natural language, processing computer languages, or parsing data structures. A parser typically breaks down the input into smaller units called tokens, and then assigns them to categories based on their syntax and semantics. A parser may also produce a representation of the input, such as a parse tree or an abstract syntax tree, that shows the hierarchical structure and the relationships between the tokens.
+
+\subsection{My Parser}
+
+In my case, I handle, 2 types of `expressions', basic statements, and return expressions, the first ones, generally are used to print values, second ones to handle complex operations, you won't even notice them, there are a third type of expression, that derives from the return expressions, used only on declared functions.
+
+My parsing life starts with the Run{()} function, used to parse and execute a series of statements in the source code of a programming language. This is an overview:
+\begin{itemize}
+\item It first gets the next token from the lexer, using `main' lexer function above explained.
+\item If the token is a PrintKeyword, it expects an opening parenthesis `(', evaluates the expression inside the parenthesis, checks for a closing parenthesis `)', and then prints the result of the evaluated expression.
+\item If the token is a LetKeyword, it calls the assignment{()} method to process the assignment of values to variables.
+\item If the token is an IfKeyword, it calls the Conditional{()} method to process the conditional instruction.
+\end{itemize}
+Some Statements must be processed, for that there is statement{()}:
+\begin{itemize}
+    \item Basically does the same as Run{()}, but with extras
+    \item If the token is an `Identifier' or `Number', it does nothing.
+    \item If the token is an `EOF' (end-of-file), it returns from the method.
+    \item If the token is not recognized, it prints an error message.
+    \item Finally, it checks if there is a semicolon (end-of-line `EOL' token) and either advances to the next statement or returns the token to the lexer to be analyzed in the next iteration.
+\end{itemize}
+Let-In expressions are handled with assignment{()} method:
+\begin{itemize}
+    \item It first gets the next token from the lexer, which should be an identifier (the variable name).
+    \item It then expects an equals `=' operator.
+    \item It evaluates the expression on the right side of the equals operator to get the assigned value.
+    \item It assigns the value to the variable in the variables dictionary.
+    \item It then checks if there is a comma, indicating another assignment statement, and recursively calls assignment{()} if there is.
+If there is no comma, it expects an in keyword.
+Finally, it calls the statement{()} method to execute the next statement.
+\end{itemize}
+
+\newpage
+Basic conditional statements, processed by Conditional{()}:
+\begin{itemize}
+    \item It first gets the next token from the lexer, which should be an opening parenthesis `('.
+    \item It then evaluates the left-hand side of the comparison, expects a comparison operator, and evaluates the right-hand side of the comparison.
+    \item It checks for a closing parenthesis `)'.
+    \item It then performs the comparison operation based on the comparison operator and stores the result.
+    \item If the comparison result is true, it calls the statement{()} method to execute the next statement.
+    \item If the comparison result is false, it skips to the else part of the if-else statement and executes the statement there.
+    \item If there is no else part, it prints an error message.
+\end{itemize}
+Note: RConditional{()} and RConditional{(List<Token> tokens)}, are simple variations of Conditional{()}, used on return expressions and functions return expressions respectively. 
+
+\subsection{Recursive Descent Parser}
+The jewel in the crown revolves around these functions, they are what allow everything to flow as well as my programming skills allow.
+
+\begin{itemize}
+    \item expression{()}
+        \begin{itemize}
+            \item It first evaluates a term.
+            \item It then enters a loop where it gets the next token from the lexer and checks if it's an operator.
+            \item If the operator is @, it evaluates the next term and concatenates it with the left-hand side.
+            \item If the operator is + or -, it evaluates the next term and performs the binary operation with the left-hand side and the operator.
+            \item If the token is not an operator, it returns the token to the lexer and returns the left-hand side as the result of the expression.
+        \end{itemize}
+    \item term{()}
+        \begin{itemize}
+            \item It first evaluates a power.
+            \item It then enters a loop where it gets the next token from the lexer and checks if it's a multiplication, division, or modulo operator.
+            \item If the token is not one of these operators, it returns the token to the lexer and returns the left-hand side as the result of the term.
+            \item If the token is one of these operators, it evaluates the next power and performs the binary operation with the left-hand side and the operator.
+        \end{itemize}
+    \item power{()}
+        \begin{itemize}
+            \item It first evaluates a primary expression.
+            \item It then enters a loop where it gets the next token from the lexer and checks if it's a power operator (\^).
+            \item If the token is not a power operator, it returns the token to the lexer and returns the left-hand side as the result of the power expression.
+            \item If the token is a power operator, it evaluates the next primary expression and performs the binary operation with the left-hand side and the operator.
+        \end{itemize}
+    \item primary{()}
+        \begin{itemize}
+            \item It first gets the next token from the lexer.
+            \item It checks if the token is a function call, and if so, it parses the arguments and calls the function.
+            \item If the token is a number, it returns the number.
+            \item If the token is a string literal, it returns the string.
+            \item If the token is an identifier, it returns the value of the variable with that name.
+            \item If the token is an opening parenthesis (, it evaluates the expression inside the parentheses.
+            \item If the token is a let keyword, it parses a let-in expression.
+            \item If the token is an if keyword, it parses an if-else expression.
+            \item If the token is a minus operator -, it negates the next number.
+            \item If the token is none of the above, it prints an error message.
+        \end{itemize}
+\end{itemize}
+
+\texttt{Note:} These functions each have an overload specifically designed to handle expressions within functions. Check fnizer.cs
+
+The function that performs Binary Operations on two operands. Simple overview:
+\begin{itemize}
+    \item It first checks if the operator token is indeed an operator.
+    \item If the operator is +, it adds the operands if they are both floats or concatenates them if they are both strings.
+    \item If the operator is -, it subtracts the operands if they are both floats.
+    \item If the operator is @, it concatenates the operands if they are both strings.
+    \item If the operator is *, it multiplies the operands if they are both floats.
+    \item If the operator is \^, it raises the left operand to the power of the right operand if they are both floats.
+    \item If the operator is /, it divides the left operand by the right operand if they are both floats.
+    \item If the operator is %, it calculates the remainder of the division of the left operand by the right operand if they are both floats.
+    \item If the operator is none of the above, it prints an error message.
+    \item If the token is not an operator, it prints an error message.
+\end{itemize}
+An extra encapsulation is ConcatenateValues():
+\begin{itemize}
+    \item If both operands are strings, it concatenates them.
+    \item If one of the operands is a string, it converts the other operand to a string and then concatenates them.
+    \item If neither operand is a string, it tries to add them if they are both floats.
+    \item If the operands cannot be concatenated or added, it prints an error message.
+\end{itemize}

@@ -71,6 +71,27 @@ More info about:
     The main function
 \end{center}
 
-The \hbox{get\_next\_token{()}} method it's actually a little bit big, it is used several times in the `Interpreter' itself, since it is in charge of tokenizing/lexing the expression as it is parsed.
+The \hbox{get\_next\_token{()}} not that simple C\# method that tokenizes a source code string for a programming language interpreter. This method reads characters from the source code and categorizes them into different types of tokens like operators, punctuation, keywords, etc.
 
-The \hbox{function\_declaration{()}}: method, present in fnizer.cs, is in charge of declare all user functions, and add them to a list, that the parser, later, will use in case some functions get invoked?
+If you're asking for an explanation of this code, here's a brief overview:
+\begin{itemize}
+\item  The `get\_next\_token' method is used to get the next token from the source code.
+\item  It first checks if there are any tokens already read and not processed. If so, it returns the first one and removes it from the list.
+\item  If there are no pre-read tokens, it starts reading the source code character by character.
+\item  Depending on the current character, it categorizes it into a token type (like operator, punctuation, keyword, etc.) and returns a new token of that type.
+\item  It also handles multi-character tokens like $`=>`$, $`==`$, $`<=`$, $`>=`$, and $`!=`$.
+\item  If it encounters a newline character (`\\n`), it increments the line count and resets the column count.
+\item  If it encounters an unrecognized character, it prints an error message.
+\item  If it reaches the end of the source code, it returns an EOF (end-of-file) token.
+\end{itemize}
+
+The `function\_declaration{()}': used to parse a function declaration in the source code of a programming language. Here's a brief overview of what it does:
+\begin{itemize}
+    \item  It first checks if the next token is a function keyword and then expects an identifier (the function name).
+    \item  It reads the function name by appending all the non-whitespace characters.
+    \item  It then checks for an opening parenthesis `(' to start the function parameters list.
+    \item  It reads all the parameters of the function, separated by commas `,`, and adds them to a list.
+    \item  It then expects a $`=>`$ token, which presumably indicates the start of the function body.
+    \item  It reads all the tokens of the function body until it encounters a semicolon `;' or an EOF (end-of-file) token, indicating the end of the function body.
+    \item  Finally, it returns a `FunctionToken' that represents the function declaration, including its name, parameters, and body. Note: This `Token', turns to `DFunction'.
+\end{itemize}

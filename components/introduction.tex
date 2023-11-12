@@ -5,7 +5,7 @@
 
 \begin{center}
     \centering
-    \section{Introduccion}
+    \section{Introduction}
 \end{center}
 Welcome to the user manual of HULK, the programming language of the University of Havana. This manual is divided into 5 sections, each one dedicated to a part of the interpreter. The first section explains how to install the interpreter, the second section explains how to use the interpreter, the third section explains how to use the lexical analyzer, the fourth section explains how to use the syntax analyzer and the fifth section Explains how to use the expression evaluator.
 
@@ -40,17 +40,25 @@ A simple `Hola Mundo' in HULK looks like this:
                 \item $``2 \pm  5;''$ || $``147.6 \pm  -63;''$
                 \item $``8 \times  2;''$ || $``200 \div 3;''$
                 \item $``2^{64};''$ || $``sqrt(3969)'' \rightarrow  ``\sqrt{3969}''$ || $``\log(2, 10);''$
-                \item Simple functions to handle trigonometrics expressions.
+                \newpage
+                \item Mathematical functions:
                     \begin{itemize}
-                        \item $``\sin({\pi})''$ 
-                        \item $``\cos({\pi})''$
-                        \item $``\tan({\pi})''$
-                        \item $``\cot({\pi})''$
-                        \item Others can be defined on the way too.
+                        \item[Sin{(x)}:] Returns the sine of x, where x is in radians. Example: Sin{(0)} returns 0.
+                        \item[Cos{(x)}:] Returns the cosine of x, where x is in radians. Example: Cos{(0)} returns 1.
+                        \item[Tan{(x)}:] Returns the tangent of x, where x is in radians. Example: Tan{(0)} returns 0.
+                        \item[Log{(x)}:] Returns the natural logarithm (base 10) of x. Example: Log{(1)} returns 0.
+                        \item[Ln{(x)}:] Returns the natural logarithm (base e) of x. Example: Ln{(1)} returns 0.
+                        \item[Sqrt{(x)}:] Returns the square root of x. Example: Sqrt{(4)} returns 2.
+                        \item[Abs{(x)}:] Returns the absolute value of x. Example: Abs{(-5)} returns 5.
+                        \item[Pow{(x, y)}:] Returns x raised to the power of y. Example: Pow{(2, 3)} returns 8.
+                        \item[Exp{(x)}:] Returns e raised to the power of x. Example: Exp{(1)} returns approximately 2.71828.
+                        \item[Floor{(x)}:] Returns the largest integer less than or equal to x. Example: Floor{(1.5)} returns 1.
+                        \item[Ceil{(x)}:] Returns the smallest integer greater than or equal to x. Example: Ceil{(1.5)} returns 2.
+                        \item[Round{(x)}:] Rounds x to the nearest integer. Example: Round{(1.5)} returns 2.
+                        \item[Rand{(min, max)}:] Returns a random integer between min (inclusive) and max (exclusive). Example: Rand{(10, 20)} returns a random number between 10 and 20.
                     \end{itemize}
                 \item And thats pretty much it $\land\times \land$ 
             \end{itemize}
-        \newpage
         \item Evaluable expressions are:
             \begin{itemize}
                 \item Printing:
@@ -62,7 +70,7 @@ A simple `Hola Mundo' in HULK looks like this:
                     \begin{description}
                         \item[] This one, contains two important keywords, ``LetKeyword'' and ``InKeyword''.
                         \item[] A basic let-in expression is: ``let $<var\_name>$ in $<statement>$''
-                        \item[] Example: ``let x = ${(63 \pm 109)}^2$ in $print(x)$; ''
+                        \item[] Example: ``let x = ${(63 \pm 109)}^2$ in $print{(x)}$; ''
                     \end{description}
                 \item Conditions:
                     \begin{description}
@@ -83,13 +91,14 @@ A simple `Hola Mundo' in HULK looks like this:
                     \end{itemize}
                 \item Note: A statement is basically another instruction or expression.
             \end{itemize}
+        \newpage
         \item Some expressions can be:
             \begin{enumerate}
                 \item print{(``Hello World'')};
                 \item print{(($({(1 + 2)} ^ 3)$ * 4) / 5)};
                 \item print{($\sin{(2 * PI)}^2$ + $\cos(3 * PI / \log(4, 64))$)};
-                \item function $\tan{(x)}$ $=>$ $\sin{(x)}$ / $\cos{(x)}$;
-                \item let x = PI/2 in $print(\tan(x)$);
+                \item function $\tan{{(x)}}$ $=>$ $\sin{{(x)}}$ / $\cos{{(x)}}$;
+                \item let x = PI/2 in $print(\tan{(x)}$);
                 \item let number = 42, text = ``The meaning of life is'' in print{(text @ number)};
                     \begin{itemize}
                         \item let number = 42 in (let text = ``The meaning of life is'' in (print$(text \ @ \ number)$));
