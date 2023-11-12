@@ -67,23 +67,38 @@ public partial class Interpreter
     // This substitute parameters for arguments
     private List<Token> SubstituteArgs(List<Token> tokens, Dictionary<string, object> argDict)
     {
-        // TODO: This is a very inefficient way of doing this, but it works for now
-        // I mean can be done better, I know how to do it, but I don't have the time to do it
         var substitutedTokens = new List<Token>();
-        //Adds the tokens to the list
+
         foreach (var token in tokens)
         {
             if (token.type == TokenType.Identifier && argDict.ContainsKey(token.value))
             {
                 var argValue = argDict[token.value];
-                substitutedTokens.Add(new Token(TokenType.Number, argValue.ToString()!, token.line, token.column));
+                TokenType argType;
+
+                // Determine the type of the argument
+                if (argValue is float)
+                {
+                    argType = TokenType.Number;
+                }
+                else if (argValue is string)
+                {
+                    argType = TokenType.StringLiteral;
+                }
+                else
+                {
+                    // Handle other types as needed
+                    argType = TokenType.Identifier;
+                }
+
+                substitutedTokens.Add(new Token(argType, argValue.ToString()!, token.line, token.column));
             }
             else
             {
                 substitutedTokens.Add(token);
             }
         }
-        // Substitutes the tokens
+
         return substitutedTokens;
     }
     // This is the equivalent to EvaluateFunction in other "projects" I guess
