@@ -72,10 +72,11 @@ The jewel in the crown revolves around these functions, they are what allow ever
     \item power{()}
         \begin{itemize}
             \item It first evaluates a primary expression.
-            \item It then enters a loop where it gets the next token from the lexer and checks if it's a power operator (\^).
+            \item It then enters a loop where it gets the next token from the lexer and checks if it's a power operator (\^{}).
             \item If the token is not a power operator, it returns the token to the lexer and returns the left-hand side as the result of the power expression.
             \item If the token is a power operator, it evaluates the next primary expression and performs the binary operation with the left-hand side and the operator.
         \end{itemize}
+    \newpage
     \item primary{()}
         \begin{itemize}
             \item It first gets the next token from the lexer.
@@ -100,16 +101,75 @@ The function that performs Binary Operations on two operands. Simple overview:
     \item If the operator is -, it subtracts the operands if they are both floats.
     \item If the operator is @, it concatenates the operands if they are both strings.
     \item If the operator is *, it multiplies the operands if they are both floats.
-    \item If the operator is \^, it raises the left operand to the power of the right operand if they are both floats.
+    \item If the operator is \^{}, it raises the left operand to the power of the right operand if they are both floats.
     \item If the operator is /, it divides the left operand by the right operand if they are both floats.
-    \item If the operator is %, it calculates the remainder of the division of the left operand by the right operand if they are both floats.
+    \item If the operator is \%, it calculates the remainder of the division of the left operand by the right operand if they are both floats.
     \item If the operator is none of the above, it prints an error message.
     \item If the token is not an operator, it prints an error message.
 \end{itemize}
-An extra encapsulation is ConcatenateValues():
+An extra encapsulation is ConcatenateValues{()}:
 \begin{itemize}
     \item If both operands are strings, it concatenates them.
     \item If one of the operands is a string, it converts the other operand to a string and then concatenates them.
     \item If neither operand is a string, it tries to add them if they are both floats.
     \item If the operands cannot be concatenated or added, it prints an error message.
+\end{itemize}
+
+\newpage
+
+\subsection{Functions}
+There are 2 types of functions, declared and predefined, declared functions are defined by the user, predefined functions are defined by the `dev' user, but are not assigned to a variable, they are used to be passed as arguments to other functions, or to be returned by other functions. 
+
+\subsubsection{Declared Functions}
+
+These are the type \hbox{``function fib{(n)} $=>$ if {($n > 1$)} fib{($n-1$)} $+$ fib{(n-2)} else 1''}, they are defined by the user, and can be assigned to a variable, or passed as an argument to another function. They are defined by the keyword `function', followed by the name of the function, then the arguments, and finally the body of the function. The body of the function is a series of statements, that can be a return expression, or a basic statement.
+
+These are defined as a ``DFunction'' class which represents a user-declared function in HULK. 
+Here's a brief overview of what it does:
+
+\begin{itemize}
+    \item expression: A list of tokens that make up the body of the function.
+    \item value: The name of the function.
+    \item parameters: A list of parameter names for the function.
+    \item type: The type of the function, represented as a TokenType.
+\end{itemize}
+The constructor for DFunction takes these four properties as parameters. It also adds an end-of-line token to the end of the function's expression. Small price to pay for salvation.
+
+DFunctions are called on the Recursive Parser section, and are handled by the ``EvaFurras{()}''{(I'm so sorry for this name)} method:
+\begin{itemize}
+    \item It first gets the function's expression tokens and parameter list.
+    \item It checks if the number of arguments matches the number of parameters. If not, it prints an error message.
+    \item It then creates a dictionary mapping each parameter to its corresponding argument.
+    \item It substitutes the arguments into the function's expression using the SubstituteArgs{()} method, which is presumably defined elsewhere in your code.
+    \item It evaluates the substituted expression using the expression{()} method, which is also presumably defined elsewhere in your code, and returns the result.
+\end{itemize}
+It uses a method called ``SubstituteArgs{()}'' it works as follows:
+\begin{itemize}
+    \item It creates a new list to hold the substituted tokens.
+    \item It then iterates over each token in the function's expression.
+    \item If the token is an identifier and it's in the argument dictionary, it substitutes the argument value for the identifier.
+    \item If the token is not an identifier or it's not in the argument dictionary, it adds the token to the list as is.
+    \item It returns the list of substituted tokens.
+\end{itemize}
+Have in mind that this method is used on the Recursive Parser section, however it uses an overload of the entire Recursive Parser section, that allows it to be used on functions, and not only on the main program.
+
+This `new' parser, does the same as the main parser, but with some extras, iterations, like processed entires functions expressions and returns the result of the function, or the result of the expression, depending on the context.
+
+\subsubsection{Predefined Functions}
+These are the simple Mathematical Functions explained above, there basically are:
+\begin{itemize}
+    \item Name: The name of the function.
+    \item Parameters: The number of parameters the function takes.
+    \item Implementation: The actual implementation of the function, represented as a Func$<$List$<$object$>$, object$>$ delegate.
+\end{itemize}
+Data found on fnizer.cs, Functions class.
+The constructor for Functions takes these three properties as parameters and takes them.
+All predefined functions are stored in a list, and are called by the primary{()} method everytime a token coincides with a predefined function name.
+
+This List is:
+\begin{itemize}
+    \item It creates a list of Functions objects, each representing a different mathematical function.
+    \item Each Functions object is initialized with a name, the number of parameters it takes, and a lambda function that implements the mathematical operation.
+    \item The lambda function takes a list of arguments, converts them to the appropriate type, and applies the mathematical operation.
+    \item The list includes functions for sine, cosine, tangent, logarithm, natural logarithm, square root, absolute value, power, exponent, floor, ceiling, round, and random number generation. All explained above too.
 \end{itemize}
