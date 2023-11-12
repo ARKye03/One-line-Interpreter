@@ -101,6 +101,12 @@ public class FunctionTests
 public class MainTests
 {
     [Test]
+    public void EqStr()
+    {
+        Assert.That(RunInterpreter("function EqStr(x,y) => if(x == y) \"true\" else \"false\";"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(EqStr(\"perro\",\"perro\"));"), Is.EqualTo("true"));
+    }
+    [Test]
     public void Pow()
     {
         Assert.That(RunInterpreter("function pow(x,y) => Pow(x,y);"), Is.EqualTo(""));
