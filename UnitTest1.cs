@@ -27,7 +27,7 @@ public class FunctionTests
     [Test]
     public void TestLog()
     {
-        Assert.That(RunInterpreter("print(Log(1));"), Is.EqualTo("0"));
+        Assert.That(RunInterpreter("print(Log(1,5));"), Is.EqualTo("0"));
     }
 
     [Test]
@@ -57,7 +57,7 @@ public class FunctionTests
     [Test]
     public void TestExp()
     {
-        Assert.That(RunInterpreter("print(Exp(1));"), Is.EqualTo(Math.Exp(1).ToString()));
+        Assert.That(RunInterpreter("print(Exp(1));"), Is.EqualTo("2.7182817"));
     }
 
     [Test]
@@ -100,6 +100,11 @@ public class FunctionTests
 [TestFixture]
 public class MainTests
 {
+    [Test]
+    public void Pow_Sum_Test()
+    {
+        Assert.That(RunInterpreter("let x = Log10(10) in print(x + Pow(2,5));"), Is.EqualTo("33"));
+    }
     [Test]
     public void EqStr()
     {
@@ -228,7 +233,7 @@ public class MainTests
     [Test]
     public void Test5()
     {
-        Assert.That(RunInterpreter("let x = 25 in print(x - 25);"), Is.EqualTo("0"));
+        Assert.That(RunInterpreter("let x = 25 in print(x - 5^2);"), Is.EqualTo("0"));
     }
 
     [Test]
