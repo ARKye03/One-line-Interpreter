@@ -15,17 +15,17 @@ public class c_ui
         interpreter.Run();
     }
     #endregion
-    //Funcion principal que se encarga de la interfaz de usuario
+    //Main function that is responsible for the user interface
     static void Main(string[] args)
     {
         if (SayBye())
             SayHello();
         while (true)
         {
-            // Lee el codigo fuente
+            // Read the source code
             Console.Write("> ");
             string? sourceCode = Console.ReadLine();
-            // Si el codigo fuente es nulo, repetir
+            // If the source code is null, repeat
             if (string.IsNullOrEmpty(sourceCode))
             {
                 Console.WriteLine("Error: source code is null \nPress any key to repeat...");
@@ -37,22 +37,22 @@ public class c_ui
                 switch (sourceCode)
                 {
                     // Comandos
-                    case "exit": // exit: salir del programa
+                    case "exit": // exit: exit the program
                         return;
                     case "info":
                         FunctionsInfo();
                         continue;
-                    case "clear": // clear: limpiar la consola
+                    case "clear": // clear: clean the console
                         Console.Clear();
                         continue;
-                    case "say_bye": // say_bye: no mostrar el menu de bienvenida
+                    case "say_bye": // say_bye: do not show the welcome menu
                         settings.SetSayHello(false);
                         continue;
-                    case "say_hello": // say_hello: mostrar el menu de bienvenida
+                    case "say_hello": // say_hello: show the welcome menu
                         settings.SetSayHello(true);
                         continue;
                 }
-                // Codigo fuente no termina con ';'
+                // Source code does not end with ';'
                 if (!sourceCode.EndsWith(";"))
                 {
                     Console.WriteLine($"Expected ';' at column {sourceCode.Length}.");
@@ -81,7 +81,13 @@ public class c_ui
             "Floor(x):  | Returns the largest integer less than or equal to x.     | Example: Floor(1.5) returns 1.",
             "Ceil(x):   | Returns the smallest integer greater than or equal to x. | Example: Ceil(1.5) returns 2.",
             "Round(x):  | Rounds x to the nearest integer.                         | Example: Round(1.5) returns 2.",
-            "Rand(min, max): Returns a random integer between min (inclusive) and max (exclusive). \n\t - Example: Rand(10, 20) returns a random number between 10 and 20."
+            "Rand(min, max):    | Returns a random integer between min (inclusive) and max (exclusive). | Example: Rand(10, 20) returns a random number between 10 and 20.",
+            "Factorial(x):      | Returns the factorial of x.                           | Example: Factorial(5) returns 120.",
+            "Fibonacci(x):      | Returns the xth number in the Fibonacci sequence.     | Example: Fibonacci(5) returns 5.",
+            "IsPrime(x):        | Returns true if x is a prime number, false otherwise. | Example: IsPrime(5) returns true.",
+            "IsEven(x):         | Returns true if x is an even number, false otherwise. | Example: IsEven(5) returns false.",
+            "IsDivisible(x, y): | Returns true if x is divisible by y, false otherwise. | Example: IsDivisible(10, 5) returns true.",
+            "IsPalindrome(x):   | Returns true if x is a palindrome, false otherwise.   | Example: IsPalindrome(\"radar\") returns true."
         };
 
         foreach (string description in functionDescriptions)
@@ -96,7 +102,7 @@ public class c_ui
         }
     }
 
-    //Funcion que se encarga de mostrar el menu de bienvenida
+    //Function that is responsible for displaying the welcome menu
     #region SayHello
     private static void SayHello()
     {

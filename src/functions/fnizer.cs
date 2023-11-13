@@ -1,6 +1,9 @@
 
 namespace mini_compiler;
 
+/// <summary>
+/// Represents a function with a name, number of parameters, and implementation.
+/// </summary>
 public class Functions
 {
     public string Name { get; }
@@ -13,6 +16,9 @@ public class Functions
         Implementation = implementation;
     }
 }
+/// <summary>
+/// Represents a function token in the lexer.
+/// </summary>
 public class FunctionToken : Token
 {
     public static List<DFunction> functions = new();
@@ -26,12 +32,23 @@ public class FunctionToken : Token
         functions.Add(new DFunction(expression, value, parameters, type));
     }
 }
+/// <summary>
+/// Represents a function in the program.
+/// </summary>
 public class DFunction
 {
     public List<Token> expression;
     public string value;
     public List<string> parameters;
     public TokenType type;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DFunction"/> class.
+    /// </summary>
+    /// <param name="expression">The expression that defines the function.</param>
+    /// <param name="value">The name of the function.</param>
+    /// <param name="parameters">The list of parameters for the function.</param>
+    /// <param name="type">The return type of the function.</param>
     public DFunction(List<Token> expression, string value, List<string> parameters, TokenType type)
     {
         this.expression = expression;
@@ -44,6 +61,12 @@ public class DFunction
 
 public partial class Interpreter
 {
+    /// <summary>
+    /// Evaluates a function with the given arguments by substituting the parameters in the function expression and evaluating the resulting expression.
+    /// </summary>
+    /// <param name="fn">The function to evaluate.</param>
+    /// <param name="args">The arguments to pass to the function.</param>
+    /// <returns>The result of evaluating the function expression with the substituted arguments.</returns>
     private object EvaFurras(DFunction fn, List<object> args)
     {
         var expressionTokens = fn.expression;
@@ -64,7 +87,12 @@ public partial class Interpreter
         var substitutedExpression = SubstituteArgs(expressionTokens, argDict);
         return expression(substitutedExpression);
     }
-    // This substitute parameters for arguments
+    /// <summary>
+    /// Substitutes the arguments in a list of tokens with their corresponding values from a dictionary.
+    /// </summary>
+    /// <param name="tokens">The list of tokens to substitute arguments in.</param>
+    /// <param name="argDict">The dictionary containing the argument names and their corresponding values.</param>
+    /// <returns>A new list of tokens with the arguments substituted.</returns>
     private List<Token> SubstituteArgs(List<Token> tokens, Dictionary<string, object> argDict)
     {
         var substitutedTokens = new List<Token>();
@@ -103,6 +131,11 @@ public partial class Interpreter
     }
     // This is the equivalent to EvaluateFunction in other "projects" I guess
     #region ExpressionOverride
+    /// <summary>
+    /// Parses and evaluates an expression from a list of tokens.
+    /// </summary>
+    /// <param name="tokens">The list of tokens to parse.</param>
+    /// <returns>The result of the evaluated expression.</returns>
     private object expression(List<Token> tokens)
     {
         var left = term(tokens);
@@ -134,6 +167,11 @@ public partial class Interpreter
         return left;
     }
 
+    /// <summary>
+    /// Evaluates the term expression of the given list of tokens.
+    /// </summary>
+    /// <param name="tokens">The list of tokens to evaluate.</param>
+    /// <returns>The result of the evaluation.</returns>
     private object term(List<Token> tokens)
     {
         var left = power(tokens);
@@ -155,6 +193,11 @@ public partial class Interpreter
         return left;
     }
 
+    /// <summary>
+    /// Evaluates the power operation in a list of tokens.
+    /// </summary>
+    /// <param name="tokens">The list of tokens to evaluate.</param>
+    /// <returns>The result of the power operation.</returns>
     private object power(List<Token> tokens)
     {
         var left = primary(tokens);
@@ -176,6 +219,11 @@ public partial class Interpreter
         return left;
     }
 
+    /// <summary>
+    /// Parses and evaluates primary expressions.
+    /// </summary>
+    /// <param name="tokens">List of tokens to be parsed.</param>
+    /// <returns>The result of the evaluated expression.</returns>
     private object primary(List<Token> tokens)
     {
         var token = tokens[0];
@@ -315,6 +363,11 @@ public partial class Interpreter
     }
     #endregion
     #region RConditionalOverload
+    /// <summary>
+    /// Evaluates a conditional statement and returns the result of the corresponding block of code.
+    /// </summary>
+    /// <param name="tokens">The list of tokens representing the conditional statement.</param>
+    /// <returns>The result of the corresponding block of code if the condition is true, otherwise null.</returns>
     private object RConditional(List<Token> tokens)
     {
         var token = tokens[0];

@@ -120,12 +120,12 @@ public partial class Interpreter
     /// <returns>Concatenated strings or + numbers</returns>
     private static object ConcatenateValues(object left, object right)
     {
-        // Si ambos valores son cadenas, concatenarlos y devolver el resultado
+        // If both values ​​are strings, concatenate them and return the result
         if (left is string l && right is string r)
         {
             return l + r;
         }
-        // Si alguno de los valores es una cadena, convertir el otro valor a cadena y concatenarlos
+        // If any of the values ​​is a string, convert the other value to a string and concatenate them
         if (left is string ls)
         {
             return ls + right.ToString();
@@ -135,12 +135,12 @@ public partial class Interpreter
         {
             return left.ToString() + rs;
         }
-        // Si ninguno de los valores es cadena, intentar sumar los números
+        // If none of the values ​​is a string, try adding the numbers
         if (left is float lf && right is float rf)
         {
             return lf + rf;
         }
-        // Si no se pueden concatenar los valores, mostrar un mensaje de error
+        // If values ​​cannot be concatenated, display an error message
         Console.WriteLine($"Invalid operands for '@' operator at line ... and column ...");
         return null!;
     }

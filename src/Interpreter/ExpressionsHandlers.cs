@@ -18,7 +18,7 @@ public partial class Interpreter
             Console.WriteLine($"Expected '=' after variable name at line {equalToken.line} and column {equalToken.column}");
             return;
         }
-        // Evaluar la expresión para obtener el valor asignado
+        // Evaluate the expression to obtain the assigned value
         var value = expression();
 
         variables[variableToken.value] = value;
@@ -26,7 +26,7 @@ public partial class Interpreter
         var nextToken = lexer.get_next_token();
         if (nextToken.type == TokenType.Punctuation && nextToken.value == ",")
         {
-            // Si hay una coma, continuar con la siguiente declaración
+            // If there is a comma, continue with the next statement
             assignment();
         }
         else if (nextToken.type != TokenType.InKeyword)
@@ -35,7 +35,7 @@ public partial class Interpreter
             return;
         }
 
-        // Ejecutar el siguiente statement 
+        // Execute the following statement
         statement();
     }
     #endregion   
@@ -92,7 +92,7 @@ public partial class Interpreter
             }
             else
             {
-                // Saltar al else
+                // Jump to else
                 while (token.type != TokenType.ElseKeyword && token.type != TokenType.EOL)
                 {
                     token = lexer.get_next_token();
@@ -179,7 +179,7 @@ public partial class Interpreter
                 return result;
             }
             {
-                // Saltar al else
+                // Jump to else
                 while (token.type != TokenType.ElseKeyword && token.type != TokenType.EOL)
                 {
                     token = lexer.get_next_token();
@@ -202,7 +202,5 @@ public partial class Interpreter
         }
     }
     #endregion
-    #region FunctionKeywords
-    //Check fnizer.cs ;)
-    #endregion
+
 }

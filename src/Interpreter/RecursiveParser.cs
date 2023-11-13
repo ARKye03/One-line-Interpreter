@@ -1,10 +1,10 @@
 namespace mini_compiler;
 public partial class Interpreter
 {
-    /* Funcion que analiza sintaticamente expresiones y devuelve su valor
-     * term(), power() y primary() son funciones que analizan sintaticamente, respectivamente, terminos, potencias y primarios
-     * expression() es la funcion que analiza sintaticamente expresiones 
-     * Para el apartado de funciones, se utiliza una lista de funciones, ademas de estas mismas funciones pero sobrecargadas y adaptadas a otro ambiente
+    /*Function that parses expressions and returns their value
+     *term(), power() and primary() are functions that parse, respectively, terms, powers and primaries
+     *expression() is the function that parses expressions
+     *For the functions section, a list of functions is used, in addition to these same functions but overloaded and adapted to another environment
      */
     /// <summary>
     /// Parses an expression and returns the result of the evaluation.
@@ -18,7 +18,7 @@ public partial class Interpreter
         {
             var token = lexer.get_next_token();
 
-            // Verificar si el operador es '@'
+            // Check if the operator is '@'
             if (token.type == TokenType.Operator && token.value == "@")
             {
                 var right = term();
@@ -31,7 +31,7 @@ public partial class Interpreter
             }
             else
             {
-                // Si no es un operador, devolver el token al lexer para que pueda ser procesado en la siguiente iteración
+                // If not an operator, return the token to the lexer so it can be processed in the next iteration
                 lexer.unget_token(token);
                 return left;
             }

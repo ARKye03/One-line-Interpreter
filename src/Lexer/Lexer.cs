@@ -27,19 +27,19 @@ public partial class Lexer
     private Token number()
     {
         string result = "";
-        // Verificar el signo positivo o negativo
+        // Check the positive or negative sign
         if (current_char == '-')
         {
             result += current_char;
             advance();
         }
-        // Reconocer la parte entera del número
+        // Recognize the whole part of the number
         while (current_char != '\0' && char.IsDigit(current_char))
         {
             result += current_char;
             advance();
         }
-        // Reconocer la parte decimal del número (si existe)
+        // Recognize the decimal part of the number (if it exists)
         if (current_char == '.')
         {
             result += current_char;
@@ -51,7 +51,7 @@ public partial class Lexer
                 advance();
             }
         }
-        // Devolver el token de número
+        // Return the number token
         return new Token(TokenType.Number, result, line, column);
     }
     /// <summary>
@@ -94,7 +94,7 @@ public partial class Lexer
         {
             Console.WriteLine($"Unterminated string literal at line {line} and column {column}");
         }
-        advance(); // Consume el segundo '"' para avanzar al siguiente token
+        advance(); // Consume the second '"' to advance to the next token
         return new Token(TokenType.StringLiteral, result, line, column);
     }
     /// <summary>
