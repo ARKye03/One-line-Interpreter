@@ -21,7 +21,7 @@ public partial class Interpreter
     /// I learnt that up there by mistake LoL, so cool
     public void Run()
     {
-        functions = FunctionToken.functions;
+        functions = DFunction.functions;
         Token token;
         //while ((token = lexer.get_next_token()).type != TokenType.EOF) //Here to multiline idea 
         //{

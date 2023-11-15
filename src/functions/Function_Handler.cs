@@ -17,30 +17,13 @@ public class Functions
     }
 }
 /// <summary>
-/// Represents a function token in the program.
-/// </summary>
-public class FunctionToken : Token
-{
-    public static readonly List<DFunction> functions = new();
-    public List<string> Parameters { get; }
-
-    public FunctionToken(TokenType type, string value, int line, int column, List<string> parameters, List<Token> expression)
-        : base(type, value, line, column)
-    {
-        Parameters = parameters;
-        expression.RemoveAt(expression.Count - 1);
-        functions.Add(new DFunction(expression, value, parameters, type));
-    }
-}
-/// <summary>
 /// Represents a function in the program.
 /// </summary>
-public class DFunction
+public class DFunction : Token
 {
+    public static readonly List<DFunction> functions = new();
     public List<Token> expression;
-    public string value;
     public List<string> parameters;
-    public TokenType type;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DFunction"/> class.
@@ -49,13 +32,14 @@ public class DFunction
     /// <param name="value">The name of the function.</param>
     /// <param name="parameters">The list of parameters for the function.</param>
     /// <param name="type">The return type of the function.</param>
-    public DFunction(List<Token> expression, string value, List<string> parameters, TokenType type)
+    public DFunction(List<Token> expression, string value, List<string> parameters, TokenType type) : base(type, value, 0, 0)
     {
         this.expression = expression;
-        expression.Add(new Token(TokenType.EOL, ";", 0, 0));
+        expression.Add(new Token(TokenType.EOL, ";", 0, 0)); // Assuming 0, 0 as line and column numbers, this works suprisingly well
         this.value = value;
         this.parameters = parameters;
         this.type = type;
+        functions.Add(this); // Add this instance of DFunction to the functions list
     }
 }
 
@@ -67,7 +51,7 @@ public partial class Interpreter
     /// <param name="fn">The function to evaluate.</param>
     /// <param name="args">The arguments to pass to the function.</param>
     /// <returns>The result of evaluating the function expression with the substituted arguments.</returns>
-    private object EvaluateFunction(DFunction fn, List<object> args)
+    private object EvaluateFunction(DFunction fn, List<object> args) // This one used to be called "EvaFurras", but my conscience prevented me from leaving it that way.
     {
         var expressionTokens = fn.expression;
         var parameterList = fn.parameters;
@@ -577,7 +561,7 @@ public partial class Lexer
             expressionTokens.Add(nextToken);
             nextToken = GetNextToken();
         }
-        // Return the function token, then it turns into a DFunction, that can be highly impproved, but for now, I need this to be like this, for me
-        return new FunctionToken(TokenType.FunctionDeclaration, function_name, line, column, parameters, expressionTokens);
+        // Returns a new DFunction with the expressionTokens, function_name, parameters and TokenType.FunctionDeclaration
+        return new DFunction(expressionTokens, function_name, parameters, TokenType.FunctionDeclaration);
     }
 }
