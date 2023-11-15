@@ -1,6 +1,8 @@
 namespace mini_compiler;
 
-// Token types
+/// <summary>
+/// Represents the type of a token in the mini_kompiler language.
+/// </summary>
 public enum TokenType
 {
     FLinq,
@@ -22,17 +24,23 @@ public enum TokenType
     Semicolon,
     Separator
 }
-// Clase Token
-// Tiene agregado una propiedad 'column' para saber en que columna esta el token
-// Tiene agregado una propiedad 'line' para saber en que linea esta el token => Pensando en el futuro, para posibilitar desarrollo multilinea
-// Tiene agregado una propiedad 'value' para saber el valor del token
-// Tiene agregado una propiedad 'type' para saber el tipo del token, enum de arriba
+/// <summary>
+/// Represents a token in the source code.
+/// </summary>
 public class Token
 {
     public TokenType type;
     public string value;
     public int line;
     public int column;
+
+    /// <summary>
+    /// Initializes a new instance of the Token class.
+    /// </summary>
+    /// <param name="type">The type of the token.</param>
+    /// <param name="value">The value of the token.</param>
+    /// <param name="line">The line number where the token was found.</param>
+    /// <param name="column">The column number where the token was found.</param>
     public Token(TokenType type, string value, int line, int column)
     {
         this.type = type;
@@ -40,7 +48,8 @@ public class Token
         this.line = line;
         this.column = column;
     }
-    // Sobreescribo el metodo ToString para poder mostrar el token en la consola, lo use al inicio para debuggear.
+
+    // I override the ToString method to be able to display the token in the console, I used it at startup to debug.
     public override string ToString()
     {
         return $"Token({type}, {value}, {line}, {column})";

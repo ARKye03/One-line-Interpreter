@@ -5,12 +5,12 @@ namespace mini_compiler;
 /// </summary>
 public partial class Lexer
 {
-    private string text; // Contains the value of actual Token
+    private readonly string text; // Contains the value of actual Token
     private int pos; // Contains the position of the actual Token
     private int line; // Contains the line of the actual Token
     private int column; // Contains the column of the actual Token
     private char current_char; // Contains the actual character
-    private List<Token> readTokens = new List<Token>(); // Contains the tokens that have been read but not yet consumed
+    private readonly List<Token> readTokens = new(); // Contains the tokens that have been read but not yet consumed
     public Lexer(string text) // Constructor
     {
         this.text = text;

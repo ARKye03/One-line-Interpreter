@@ -5,9 +5,13 @@ using System.Text.Json;
 
 namespace mini_compiler;
 //Here I handle the IO of the user
-public class c_ui
+public class Console_UI
 {
     #region Test
+    /// <summary>
+    /// Executes the provided source code using the interpreter.
+    /// </summary>
+    /// <param name="sourceCode">The source code to execute.</param>
     public static void Test(string sourceCode)
     {
         // Run interpreter
@@ -15,11 +19,12 @@ public class c_ui
         interpreter.Run();
     }
     #endregion
+    #region UI
     //Main function that is responsible for the user interface
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
-        if (SayBye())
-            SayHello();
+        if (NoGreet())
+            Greet();
         while (true)
         {
             // Read the source code
@@ -59,15 +64,19 @@ public class c_ui
                     continue;
                 }
                 // Run interpreter
-                Interpreter interpreter = new Interpreter(sourceCode!);
+                Interpreter interpreter = new(sourceCode!);
                 interpreter.Run();
             }
         }
     }
-
+    #endregion
+    #region FunctionsInfo
+    /// <summary>
+    /// Prints a list of available math functions and their descriptions to the console.
+    /// </summary>
     private static void FunctionsInfo()
     {
-        List<string> functionDescriptions = new List<string>
+        List<string> functionDescriptions = new()
         {
             "Sin(x):    | Returns the sine of x, where x is in radians.            | Example: Sin(0) returns 0.",
             "Cos(x):    | Returns the cosine of x, where x is in radians.          | Example: Cos(0) returns 1.",
@@ -101,12 +110,12 @@ public class c_ui
             Console.WriteLine(parts.Length > 1 ? ":" + parts[1] : ""); // Print the rest of the description in the default color
         }
     }
-
+    #endregion
+    #region Greeter
     //Function that is responsible for displaying the welcome menu
-    #region SayHello
-    private static void SayHello()
+    private static void Greet()
     {
-        SayBye();
+        NoGreet();
         string[] lines = {
             "          <- Welcome to my mini_kompiler! ->               \n",
             "----------------------------------------------------------   ",
@@ -136,15 +145,18 @@ public class c_ui
         }
         Console.ResetColor();
     }
-    private static Settings settings = new Settings();
-    private static bool SayBye()
+    /// <summary>
+    /// The settings object used by the Console_UI class.
+    /// </summary>
+    private static readonly Settings settings = new();
+    private static bool NoGreet()
     {
         // Check if the settings file exists
         if (!File.Exists(".settings/settings.json"))
         {
             // Create a new settings object
             {
-                settings.say_hello = true;
+                settings.Greet = true;
             };
             // Serialize the settings to JSON
             string json = JsonSerializer.Serialize(settings);
@@ -160,16 +172,16 @@ public class c_ui
             string json = File.ReadAllText(".settings/settings.json");
             Settings? settings = JsonSerializer.Deserialize<Settings>(json);
             // Return the value of the say_hello property
-            return settings!.say_hello;
+            return settings!.Greet;
         }
     }
     private class Settings
     {
-        public bool say_hello { get; set; }
+        public bool Greet { get; set; }
 
         public void SetSayHello(bool value)
         {
-            say_hello = value;
+            Greet = value;
             // Serialize the settings to JSON
             string json = JsonSerializer.Serialize(this);
             // Write the JSON to the file

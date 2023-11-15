@@ -517,7 +517,7 @@ public partial class Lexer
         }
 
         // Check the parameters of the function
-        List<string> parameters = new List<string>();
+        List<string> parameters = new();
         Advance();
         while (current_char != ')')
         {

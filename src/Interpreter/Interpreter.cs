@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace mini_compiler;
 
 public partial class Interpreter
@@ -69,7 +67,7 @@ public partial class Interpreter
 
     }
     // Variable assignment, this handles all vars
-    private Dictionary<string, object> variables = new Dictionary<string, object>();
+    private readonly Dictionary<string, object> variables = new();
 
     /// <summary>
     /// This method analyzes and executes a statement based on the token type obtained from the lexer.
