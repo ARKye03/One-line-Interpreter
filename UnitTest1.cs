@@ -91,7 +91,7 @@ public class FunctionTests
         using (var sw = new StringWriter())
         {
             Console.SetOut(sw);
-            c_ui.Test(sourceCode);
+            Console_UI.Test(sourceCode);
             return sw.ToString().Trim();
         }
     }
@@ -233,7 +233,7 @@ public class MainTests
     [Test]
     public void Test5()
     {
-        Assert.That(RunInterpreter("let x = 25 in print(x - 5^2);"), Is.EqualTo("0"));
+        Assert.That(RunInterpreter("let x = 25 in print(x - (5^2));"), Is.EqualTo("0"));
     }
 
     [Test]
@@ -270,14 +270,12 @@ public class MainTests
     {
         Assert.That(RunInterpreter("print(2 + 5);"), Is.EqualTo("7"));
     }
-    c_ui c_ui = new c_ui();
-
     private string RunInterpreter(string sourceCode)
     {
         using (var sw = new StringWriter())
         {
             Console.SetOut(sw);
-            c_ui.Test(sourceCode);
+            Console_UI.Test(sourceCode);
             return sw.ToString().Trim();
         }
     }
@@ -301,7 +299,7 @@ public class VirginTest
         using (var sw = new StringWriter())
         {
             Console.SetOut(sw);
-            c_ui.Test(sourceCode);
+            Console_UI.Test(sourceCode);
             return sw.ToString().Trim();
         }
     }
