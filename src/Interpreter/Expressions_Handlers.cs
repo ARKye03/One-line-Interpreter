@@ -6,24 +6,24 @@ public partial class Interpreter
     #region LetKeywords
     private void assignment()
     {
-        var variableToken = lexer.get_next_token();
+        var variableToken = lexer.GetNextToken();
         if (variableToken.type != TokenType.Identifier)
         {
             Console.WriteLine($"Expected variable name after 'let' keyword at line {variableToken.line} and column {variableToken.column}");
             return;
         }
-        var equalToken = lexer.get_next_token();
+        var equalToken = lexer.GetNextToken();
         if (equalToken.type != TokenType.Operator || equalToken.value != "=")
         {
             Console.WriteLine($"Expected '=' after variable name at line {equalToken.line} and column {equalToken.column}");
             return;
         }
         // Evaluate the expression to obtain the assigned value
-        var value = expression();
+        var value = Expression();
 
         variables[variableToken.value] = value;
 
-        var nextToken = lexer.get_next_token();
+        var nextToken = lexer.GetNextToken();
         if (nextToken.type == TokenType.Punctuation && nextToken.value == ",")
         {
             // If there is a comma, continue with the next statement
@@ -43,18 +43,18 @@ public partial class Interpreter
     #region ConditionalKeywords
     private void Conditional()
     {
-        var token = lexer.get_next_token();
+        var token = lexer.GetNextToken();
         if (token.type == TokenType.Punctuation && token.value == "(")
         {
-            var leftValue = expression();
-            var comparisonToken = lexer.get_next_token();
+            var leftValue = Expression();
+            var comparisonToken = lexer.GetNextToken();
             if (comparisonToken.type != TokenType.ComparisonOperator)
             {
                 Console.WriteLine($"Expected comparison operator after left-hand side of comparison in 'if' statement at line {comparisonToken.line} and column {comparisonToken.column}");
                 return;
             }
-            var rightValue = expression();
-            var nextToken = lexer.get_next_token();
+            var rightValue = Expression();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
             {
                 Console.WriteLine($"Expected ')' after right-hand side of comparison in 'if' statement at line {nextToken.line} and column {nextToken.column}");
@@ -95,7 +95,7 @@ public partial class Interpreter
                 // Jump to else
                 while (token.type != TokenType.ElseKeyword && token.type != TokenType.EOL)
                 {
-                    token = lexer.get_next_token();
+                    token = lexer.GetNextToken();
                 }
                 if (token.type == TokenType.ElseKeyword)
                 {
@@ -116,18 +116,18 @@ public partial class Interpreter
     #region ConditionalOverload
     private object RConditional()
     {
-        var token = lexer.get_next_token();
+        var token = lexer.GetNextToken();
         if (token.type == TokenType.Punctuation && token.value == "(")
         {
-            var leftValue = expression();
-            var comparisonToken = lexer.get_next_token();
+            var leftValue = Expression();
+            var comparisonToken = lexer.GetNextToken();
             if (comparisonToken.type != TokenType.ComparisonOperator)
             {
                 Console.WriteLine($"Expected comparison operator after left-hand side of comparison in 'if' statement at line {comparisonToken.line} and column {comparisonToken.column}");
                 return null!;
             }
-            var rightValue = expression();
-            var nextToken = lexer.get_next_token();
+            var rightValue = Expression();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
             {
                 Console.WriteLine($"Expected ')' after right-hand side of comparison in 'if' statement at line {nextToken.line} and column {nextToken.column}");
@@ -161,14 +161,14 @@ public partial class Interpreter
             }
             if (comparisonResult)
             {
-                var result = expression();
+                var result = Expression();
                 // Skip the else block
                 while (true)
                 {
-                    token = lexer.get_next_token();
+                    token = lexer.GetNextToken();
                     if (token.type == TokenType.InKeyword)
                     {
-                        lexer.unget_token(token); // Put the InKeyword back into the lexer
+                        lexer.UngetToken(token); // Put the InKeyword back into the lexer
                         break;
                     }
                     else if (token.type == TokenType.EOL)
@@ -182,11 +182,11 @@ public partial class Interpreter
                 // Jump to else
                 while (token.type != TokenType.ElseKeyword && token.type != TokenType.EOL)
                 {
-                    token = lexer.get_next_token();
+                    token = lexer.GetNextToken();
                 }
                 if (token.type == TokenType.ElseKeyword)
                 {
-                    return expression();
+                    return Expression();
                 }
                 else
                 {

@@ -4,7 +4,7 @@ public partial class Lexer
     /// <summary>
     /// Advances the position of the lexer to the next character in the input text.
     /// </summary>
-    private void advance()
+    private void Advance()
     {
         pos++;
         column++;
@@ -20,18 +20,18 @@ public partial class Lexer
     /// <summary>
     /// Skips all whitespace characters until a non-whitespace character is found.
     /// </summary>
-    private void skip_whitespace()
+    private void SkipWhitespace()
     {
         while (current_char != '\0' && char.IsWhiteSpace(current_char))
         {
-            advance();
+            Advance();
         }
     }
     /// <summary>
     /// Returns the next character in the input string without consuming it.
     /// </summary>
     /// <returns>The next character in the input string, or '\0' if there are no more characters.</returns>
-    private char peek()
+    private char Peek()
     {
         var peek_pos = pos + 1;
         if (peek_pos >= text.Length)
@@ -42,6 +42,14 @@ public partial class Lexer
         {
             return text[peek_pos];
         }
+    }
+    /// <summary>
+    /// Function that trash one token
+    /// </summary>
+    /// <returns>None</returns>
+    public void UngetToken(Token token)
+    {
+        readTokens.Insert(0, token);
     }
 
 }

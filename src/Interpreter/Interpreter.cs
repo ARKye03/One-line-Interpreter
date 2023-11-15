@@ -25,18 +25,18 @@ public partial class Interpreter
         Token token;
         //while ((token = lexer.get_next_token()).type != TokenType.EOF) //Here to multiline idea 
         //{
-        token = lexer.get_next_token();
+        token = lexer.GetNextToken();
         if (token.type == TokenType.PrintKeyword)
         {
             // Check the content between parenthesis and execute the corresponding action
-            var nextToken = lexer.get_next_token();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
             {
                 // Evaluate the expression inside the print and get the result
-                var expressionValue = expression();
+                var expressionValue = Expression();
 
                 // Check that the parenthesis is closed
-                nextToken = lexer.get_next_token();
+                nextToken = lexer.GetNextToken();
                 if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
                 {
                     // If the parenthesis is not closed, print an error
@@ -79,19 +79,19 @@ public partial class Interpreter
     private void statement()
     {
         // Get the next token
-        var token = lexer.get_next_token();
+        var token = lexer.GetNextToken();
         // Check the type of the token
         if (token.type == TokenType.PrintKeyword)
         {
             // Check the content between parenthesis and execute the corresponding action
-            var nextToken = lexer.get_next_token();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
             {
                 // Evaluate whats in => 'print(...)'
-                var expressionValue = expression();
+                var expressionValue = Expression();
 
                 // Verify that the parenthesis is closed
-                nextToken = lexer.get_next_token();
+                nextToken = lexer.GetNextToken();
                 if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
                 {
                     // If the parenthesis is not closed, print an error
@@ -130,14 +130,14 @@ public partial class Interpreter
             Console.WriteLine($"Invalid statement at line {token.line} and column {token.column}");
         }
         // Verify if there is a semicolon and advance to the next statement
-        token = lexer.get_next_token(); // Re-use the token 
+        token = lexer.GetNextToken(); // Re-use the token 
         if (token.type == TokenType.EOL)
         {
             statement(); // Next statement
         }
         else
         {
-            lexer.unget_token(token); // Return the token to be analyzed in the next iteration
+            lexer.UngetToken(token); // Return the token to be analyzed in the next iteration
         }
     }
 }

@@ -10,29 +10,29 @@ public partial class Interpreter
     /// Parses an expression and returns the result of the evaluation.
     /// </summary>
     /// <returns>The result of the evaluation.</returns>
-    private object expression()
+    private object Expression()
     {
-        var left = term();
+        var left = Term();
 
         while (true)
         {
-            var token = lexer.get_next_token();
+            var token = lexer.GetNextToken();
 
             // Check if the operator is '@'
             if (token.type == TokenType.Operator && token.value == "@")
             {
-                var right = term();
+                var right = Term();
                 left = ConcatenateValues(left, right);
             }
             else if (token.type == TokenType.Operator && (token.value == "+" || token.value == "-"))
             {
-                var right = term();
+                var right = Term();
                 left = BinaryOperation(left, token, right);
             }
             else
             {
                 // If not an operator, return the token to the lexer so it can be processed in the next iteration
-                lexer.unget_token(token);
+                lexer.UngetToken(token);
                 return left;
             }
         }
@@ -41,20 +41,20 @@ public partial class Interpreter
     /// Parses and evaluates a term in the expression, which is a sequence of factors separated by multiplication, division, or modulo operators.
     /// </summary>
     /// <returns>The result of the evaluated term.</returns>
-    private object term()
+    private object Term()
     {
-        var left = power();
+        var left = Power();
 
         while (true)
         {
-            var token = lexer.get_next_token();
+            var token = lexer.GetNextToken();
 
             if (token.type != TokenType.Operator || (token.value != "*" && token.value != "/" && token.value != "%"))
             {
-                lexer.unget_token(token);
+                lexer.UngetToken(token);
                 return left;
             }
-            var right = power();
+            var right = Power();
             left = BinaryOperation(left, token, right);
         }
     }
@@ -62,20 +62,20 @@ public partial class Interpreter
     /// Parses and evaluates power expressions.
     /// </summary>
     /// <returns>The result of the power expression.</returns>
-    private object power()
+    private object Power()
     {
-        var left = primary();
+        var left = Primary();
 
         while (true)
         {
-            var token = lexer.get_next_token();
+            var token = lexer.GetNextToken();
 
             if (token.type != TokenType.Operator || token.value != "^")
             {
-                lexer.unget_token(token);
+                lexer.UngetToken(token);
                 return left;
             }
-            var right = primary();
+            var right = Primary();
             left = BinaryOperation(left, token, right);
         }
     }
@@ -83,24 +83,24 @@ public partial class Interpreter
     /// Parses primary expressions in the input code.
     /// </summary>
     /// <returns>The parsed object.</returns>
-    private object primary()
+    private object Primary()
     {
-        var token = lexer.get_next_token();
+        var token = lexer.GetNextToken();
 
         var function = functions?.Find(func => func.value == token.value);
         if (function != null)
         {
             List<object> args = new();
-            var nextToken = lexer.get_next_token();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.value != "(" || nextToken.type != TokenType.Punctuation)
             {
                 Console.WriteLine($"Expected \"(\" after function name at {nextToken.column}");
             }
             while (true)
             {
-                var arg = expression();
+                var arg = Expression();
                 args.Add(arg);
-                var delimiterToken = lexer.get_next_token();
+                var delimiterToken = lexer.GetNextToken();
                 if (delimiterToken.value == ")")
                 {
                     break;
@@ -110,22 +110,22 @@ public partial class Interpreter
                     Console.WriteLine($"Expected \",\" or \")\" after function argument at {delimiterToken.column}");
                 }
             }
-            return EvaFurras(function, args);
+            return EvaluateFunction(function, args);
         }
         var functionx = functions2?.Find(func => func.Name == token.value);
         if (functionx != null)
         {
             List<object> args = new();
-            var nextToken = lexer.get_next_token();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.value != "(" || nextToken.type != TokenType.Punctuation)
             {
                 Console.WriteLine($"Expected \"(\" after function name at {nextToken.column}");
             }
             while (true)
             {
-                var arg = expression();
+                var arg = Expression();
                 args.Add(arg);
-                var delimiterToken = lexer.get_next_token();
+                var delimiterToken = lexer.GetNextToken();
                 if (delimiterToken.value == ")")
                 {
                     break;
@@ -158,8 +158,8 @@ public partial class Interpreter
         }
         else if (token.type == TokenType.Punctuation && token.value == "(")
         {
-            var expressionValue = expression();
-            var nextToken = lexer.get_next_token();
+            var expressionValue = Expression();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
             {
                 Console.WriteLine($"Expected ')' after expression at line {nextToken.line} and column {nextToken.column}");
@@ -169,27 +169,27 @@ public partial class Interpreter
         }
         else if (token.type == TokenType.LetKeyword && token.value == "let")
         {
-            var variableToken = lexer.get_next_token();
+            var variableToken = lexer.GetNextToken();
             if (variableToken.type != TokenType.Identifier)
             {
                 Console.WriteLine($"Expected identifier after 'let' keyword at line {variableToken.line} and column {variableToken.column}");
                 return null!;
             }
-            var equalsToken = lexer.get_next_token();
+            var equalsToken = lexer.GetNextToken();
             if (equalsToken.type != TokenType.Operator || equalsToken.value != "=")
             {
                 Console.WriteLine($"Expected '=' after identifier in 'let' expression at line {equalsToken.line} and column {equalsToken.column}");
                 return null!;
             }
-            var value = expression();
+            var value = Expression();
             variables[variableToken.value] = value;
-            var nextToken = lexer.get_next_token();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.type != TokenType.InKeyword || nextToken.value != "in")
             {
                 Console.WriteLine($"Expected 'in' keyword after expression in 'let' expression at line {nextToken.line} and column {nextToken.column}");
                 return null!;
             }
-            var expressionValue = expression();
+            var expressionValue = Expression();
             return expressionValue;
         }
         else if (token.type == TokenType.IfKeyword && token.value == "if")
@@ -198,7 +198,7 @@ public partial class Interpreter
         }
         else if (token.type == TokenType.Operator && token.value == "-")
         {
-            var nextToken = lexer.get_next_token();
+            var nextToken = lexer.GetNextToken();
             if (nextToken.type == TokenType.Number)
             {
                 return -float.Parse(nextToken.value);

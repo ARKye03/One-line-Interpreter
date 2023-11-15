@@ -17,11 +17,11 @@ public class Functions
     }
 }
 /// <summary>
-/// Represents a function token in the lexer.
+/// Represents a function token in the program.
 /// </summary>
 public class FunctionToken : Token
 {
-    public static List<DFunction> functions = new();
+    public static readonly List<DFunction> functions = new();
     public List<string> Parameters { get; }
 
     public FunctionToken(TokenType type, string value, int line, int column, List<string> parameters, List<Token> expression)
@@ -67,7 +67,7 @@ public partial class Interpreter
     /// <param name="fn">The function to evaluate.</param>
     /// <param name="args">The arguments to pass to the function.</param>
     /// <returns>The result of evaluating the function expression with the substituted arguments.</returns>
-    private object EvaFurras(DFunction fn, List<object> args)
+    private object EvaluateFunction(DFunction fn, List<object> args)
     {
         var expressionTokens = fn.expression;
         var parameterList = fn.parameters;
@@ -85,7 +85,7 @@ public partial class Interpreter
         }
 
         var substitutedExpression = SubstituteArgs(expressionTokens, argDict);
-        return expression(substitutedExpression);
+        return Expression(substitutedExpression);
     }
     /// <summary>
     /// Substitutes the arguments in a list of tokens with their corresponding values from a dictionary.
@@ -136,9 +136,9 @@ public partial class Interpreter
     /// </summary>
     /// <param name="tokens">The list of tokens to parse.</param>
     /// <returns>The result of the evaluated expression.</returns>
-    private object expression(List<Token> tokens)
+    private object Expression(List<Token> tokens)
     {
-        var left = term(tokens);
+        var left = Term(tokens);
 
         while (tokens.Count > 0)
         {
@@ -148,12 +148,12 @@ public partial class Interpreter
             // Verificar si el operador es '@'
             if (token.type == TokenType.Operator && token.value == "@")
             {
-                var right = term(tokens);
+                var right = Term(tokens);
                 left = ConcatenateValues(left, right);
             }
             else if (token.type == TokenType.Operator && (token.value == "+" || token.value == "-"))
             {
-                var right = term(tokens);
+                var right = Term(tokens);
                 left = BinaryOperation(left, token, right);
             }
             else
@@ -172,9 +172,9 @@ public partial class Interpreter
     /// </summary>
     /// <param name="tokens">The list of tokens to evaluate.</param>
     /// <returns>The result of the evaluation.</returns>
-    private object term(List<Token> tokens)
+    private object Term(List<Token> tokens)
     {
-        var left = power(tokens);
+        var left = Power(tokens);
 
         while (tokens.Count > 0)
         {
@@ -186,7 +186,7 @@ public partial class Interpreter
             }
 
             tokens.RemoveAt(0);
-            var right = power(tokens);
+            var right = Power(tokens);
             left = BinaryOperation(left, token, right);
         }
 
@@ -198,9 +198,9 @@ public partial class Interpreter
     /// </summary>
     /// <param name="tokens">The list of tokens to evaluate.</param>
     /// <returns>The result of the power operation.</returns>
-    private object power(List<Token> tokens)
+    private object Power(List<Token> tokens)
     {
-        var left = primary(tokens);
+        var left = Primary(tokens);
 
         while (tokens.Count > 0)
         {
@@ -212,7 +212,7 @@ public partial class Interpreter
             }
 
             tokens.RemoveAt(0);
-            var right = primary(tokens);
+            var right = Primary(tokens);
             left = BinaryOperation(left, token, right);
         }
 
@@ -224,7 +224,7 @@ public partial class Interpreter
     /// </summary>
     /// <param name="tokens">List of tokens to be parsed.</param>
     /// <returns>The result of the evaluated expression.</returns>
-    private object primary(List<Token> tokens)
+    private object Primary(List<Token> tokens)
     {
         var token = tokens[0];
         tokens.RemoveAt(0);
@@ -241,7 +241,7 @@ public partial class Interpreter
             }
             while (tokens.Count > 0)
             {
-                var arg = expression(tokens);
+                var arg = Expression(tokens);
                 args.Add(arg);
                 var delimiterToken = tokens[0];
                 tokens.RemoveAt(0);
@@ -254,7 +254,7 @@ public partial class Interpreter
                     Console.WriteLine($"Expected \",\" or \")\" after function argument at {delimiterToken.column}");
                 }
             }
-            return EvaFurras(function, args);
+            return EvaluateFunction(function, args);
         }
         var function2 = functions2?.Find(func => func.Name == token.value);
         if (function2 != null)
@@ -268,7 +268,7 @@ public partial class Interpreter
             }
             while (tokens.Count > 0)
             {
-                var arg = expression(tokens);
+                var arg = Expression(tokens);
                 args.Add(arg);
                 var delimiterToken = tokens[0];
                 tokens.RemoveAt(0);
@@ -302,7 +302,7 @@ public partial class Interpreter
         }
         else if (token.type == TokenType.Punctuation && token.value == "(")
         {
-            var expressionValue = expression(tokens);
+            var expressionValue = Expression(tokens);
             var nextToken = tokens[0];
             tokens.RemoveAt(0);
             if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
@@ -328,7 +328,7 @@ public partial class Interpreter
                 Console.WriteLine($"Expected '=' after identifier in 'let' expression at line {equalsToken.line} and column {equalsToken.column}");
                 return null!;
             }
-            var value = expression(tokens);
+            var value = Expression(tokens);
             variables[variableToken.value] = value;
             var nextToken = tokens[0];
             tokens.RemoveAt(0);
@@ -337,7 +337,7 @@ public partial class Interpreter
                 Console.WriteLine($"Expected 'in' keyword after expression in 'let' expression at line {nextToken.line} and column {nextToken.column}");
                 return null!;
             }
-            var expressionValue = expression(tokens);
+            var expressionValue = Expression(tokens);
             return expressionValue;
         }
         else if (token.type == TokenType.IfKeyword)
@@ -374,7 +374,7 @@ public partial class Interpreter
         tokens.RemoveAt(0);
         if (token.type == TokenType.Punctuation && token.value == "(")
         {
-            var leftValue = expression(tokens);
+            var leftValue = Expression(tokens);
             var comparisonToken = tokens[0];
             tokens.RemoveAt(0);
             if (comparisonToken.type != TokenType.ComparisonOperator)
@@ -382,7 +382,7 @@ public partial class Interpreter
                 Console.WriteLine($"Expected comparison operator after left-hand side of comparison in 'if' statement at line {comparisonToken.line} and column {comparisonToken.column}");
                 return null!;
             }
-            var rightValue = expression(tokens);
+            var rightValue = Expression(tokens);
             var nextToken = tokens[0];
             tokens.RemoveAt(0);
             if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
@@ -418,7 +418,7 @@ public partial class Interpreter
             }
             if (comparisonResult)
             {
-                var result = expression(tokens);
+                var result = Expression(tokens);
                 // Skip the else block
                 while (true)
                 {
@@ -446,7 +446,7 @@ public partial class Interpreter
                 }
                 if (token.type == TokenType.ElseKeyword)
                 {
-                    return expression(tokens);
+                    return Expression(tokens);
                 }
                 else
                 {
@@ -469,7 +469,7 @@ public partial class Interpreter
                 }
                 while (tokens.Count > 0)
                 {
-                    var arg = expression(tokens);
+                    var arg = Expression(tokens);
                     args.Add(arg);
                     var delimiterToken = tokens[0];
                     tokens.RemoveAt(0);
@@ -482,7 +482,7 @@ public partial class Interpreter
                         Console.WriteLine($"Expected \",\" or \")\" after function argument at {delimiterToken.column}");
                     }
                 }
-                return EvaFurras(function, args);
+                return EvaluateFunction(function, args);
             }
             else
             {
@@ -505,12 +505,12 @@ public partial class Lexer
     /// Process the assignment of declarable? functions and add them to the list of functions
     /// </summary>
     /// <returns> DFunction </returns>
-    private Token function_declaration()
+    private Token FunctionDeclaration()
     {
         // Check that the next token is 'function'
         // After 'function' we expect an identifier
-        advance(); // Advance to the next token
-        skip_whitespace(); // Skip all the whitespace characters until a non-whitespace character is found
+        Advance(); // Advance to the next token
+        SkipWhitespace(); // Skip all the whitespace characters until a non-whitespace character is found
 
         if (!char.IsLetter(current_char))
         {
@@ -523,9 +523,9 @@ public partial class Lexer
         while (current_char != '\0' && char.IsLetterOrDigit(current_char))
         {
             function_name += current_char;
-            advance();
+            Advance();
         }
-        skip_whitespace();
+        SkipWhitespace();
         if (current_char != '(')
         {
             // If the next character is not a '(', print an error
@@ -534,7 +534,7 @@ public partial class Lexer
 
         // Check the parameters of the function
         List<string> parameters = new List<string>();
-        advance();
+        Advance();
         while (current_char != ')')
         {
             if (!char.IsLetter(current_char))
@@ -548,20 +548,20 @@ public partial class Lexer
             {
                 // While non whitespace characters are found, append them to the parameter_name string
                 parameter_name += current_char;
-                advance();
+                Advance();
             }
             // Add the parameter name to the list of parameters
             parameters.Add(parameter_name);
-            skip_whitespace();
+            SkipWhitespace();
             // Multi parameter support
             if (current_char == ',')
             {
-                advance();
-                skip_whitespace();
+                Advance();
+                SkipWhitespace();
             }
         }
-        advance(); // Avanzar después del ')'
-        var nextToken = get_next_token();
+        Advance(); // Move forward after ')'
+        var nextToken = GetNextToken();
         if (nextToken.type != TokenType.FLinq || nextToken.value != "=>")
         {
             // If the next token is not '=>', print an error
@@ -569,13 +569,13 @@ public partial class Lexer
         }
         // Analize the function body as an expression
         var expressionTokens = new List<Token>();
-        nextToken = get_next_token();
+        nextToken = GetNextToken();
         // While the next token is not a semicolon, add the tokens to the expressionTokens list
         // This gave a funny overflow once, ahh hilarious
         while (nextToken.type != TokenType.Semicolon && nextToken.type != TokenType.EOF)
         {
             expressionTokens.Add(nextToken);
-            nextToken = get_next_token();
+            nextToken = GetNextToken();
         }
         // Return the function token, then it turns into a DFunction, that can be highly impproved, but for now, I need this to be like this, for me
         return new FunctionToken(TokenType.FunctionDeclaration, function_name, line, column, parameters, expressionTokens);
