@@ -70,7 +70,7 @@ public partial class Interpreter
             {
                 if (left is float l && right is float r)
                 {
-                    return Math.Pow(l, r);
+                    return Convert.ToSingle(Math.Pow(l, r));
                 }
                 else
                 {

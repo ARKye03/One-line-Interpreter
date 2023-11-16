@@ -26,8 +26,6 @@ public partial class Interpreter
     {
         functions = DFunction.functions;
         Token token;
-        //while ((token = lexer.get_next_token()).type != TokenType.EOF) //Here to multiline idea 
-        //{
         token = lexer.GetNextToken();
         if (token.type == TokenType.PrintKeyword)
         {
