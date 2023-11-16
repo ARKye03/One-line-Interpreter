@@ -263,7 +263,7 @@ public class MainTests
     [Test]
     public void Test9()
     {
-        Assert.That(RunInterpreter("let crazymath = ((2 - 18 * 2) + (2 / 10)) in print(crazymath ^ 2);"), Is.EqualTo("1142.4399484252936"));
+        Assert.That(RunInterpreter("let crazymath = ((2 - 18 * 2) + (2 / 10)) in print(crazymath ^ 2);"), Is.EqualTo("1142.44"));
     }
 
     [Test]
