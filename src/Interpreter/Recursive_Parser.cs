@@ -138,7 +138,11 @@ public partial class Interpreter
             // Call the function with the arguments
             return functionx.Implementation(args);
         }
-
+        else if (constants.ContainsKey(token.value))
+        {
+            // If the token is a constant, return its value
+            return constants[token.value];
+        }
         if (token.type == TokenType.Number)
         {
             return float.Parse(token.value);

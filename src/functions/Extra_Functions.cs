@@ -1,6 +1,30 @@
 namespace mini_compiler;
+
 public partial class Interpreter
 {
+    #region Constants
+    // Define a dictionary of constants
+    readonly Dictionary<string, float> constants = new()
+    {
+    { "CoPI", (float)Math.PI },                 //  Arquimedes's constant
+    { "CoE", (float)Math.E },                   //  Euler's constant
+    { "CoPyC", (float)Math.Sqrt(2)},            //  Pythagoras' constant
+    { "CoThC", (float)Math.Sqrt(3)},            //  Theodorus' constant
+    { "CoG", 6.6743f},                          //  Newton's constant
+    { "CoPhi", (float)(1 + Math.Sqrt(5)) / 2},  //  Aurea's constant
+    { "CoGamma", 0.5772156649f},                //  Euler-Mascheroni constant
+    { "CoGc", 0.9159655942f},                   //  Catalan's constant
+    { "CoK", 2.6854520010f},                    //  Khinchin's constant
+    { "CoOmega", 0.5671432904f},                //  Omega constant
+    { "CoA", 1.2824271291f},                    //  Glaisher-Kinkelin constant
+    { "CoM", 0.2614972128f},                    //  Mertens constant
+    { "CoKp", 0.2758229187f},                   //  Kaprekar constant
+    { "CoH", 6.62607015f},                      //  Planck constant
+
+
+};
+    #endregion
+
     #region FunctionsList
     /// <summary>
     /// List of DFunction objects representing the functions in the program.
@@ -42,7 +66,7 @@ public partial class Interpreter
 
     };
     #endregion
-    #region ExtraMethods
+    #region ExtraFunctions_Methods
     /// <summary>
     /// Calculates the factorial of a given integer.
     /// </summary>

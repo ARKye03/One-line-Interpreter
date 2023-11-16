@@ -270,6 +270,11 @@ public partial class Interpreter
             }
             return function2.Implementation(args);
         }
+        else if (constants.ContainsKey(token.value))
+        {
+            // If the token is a constant, return its value
+            return constants[token.value];
+        }
         if (token.type == TokenType.Number)
         {
             return float.Parse(token.value);
