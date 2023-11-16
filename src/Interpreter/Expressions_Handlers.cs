@@ -2,9 +2,9 @@ namespace mini_compiler;
 
 public partial class Interpreter
 {
-    //Function to handle vars assignment in let-in expressions
     #region LetKeywords
-    private void assignment()
+    //Function to handle vars assignment in let-in expressions
+    private void LetAssignment()
     {
         var variableToken = lexer.GetNextToken();
         if (variableToken.type != TokenType.Identifier)
@@ -27,7 +27,7 @@ public partial class Interpreter
         if (nextToken.type == TokenType.Punctuation && nextToken.value == ",")
         {
             // If there is a comma, continue with the next statement
-            assignment();
+            LetAssignment();
         }
         else if (nextToken.type != TokenType.InKeyword)
         {
@@ -36,11 +36,11 @@ public partial class Interpreter
         }
 
         // Execute the following statement
-        statement();
+        Statement();
     }
     #endregion   
-    //Function to conditional expressions
     #region ConditionalKeywords
+    //Function to conditional expressions
     private void Conditional()
     {
         var token = lexer.GetNextToken();
@@ -88,7 +88,7 @@ public partial class Interpreter
             }
             if (comparisonResult)
             {
-                statement();
+                Statement();
             }
             else
             {
@@ -99,7 +99,7 @@ public partial class Interpreter
                 }
                 if (token.type == TokenType.ElseKeyword)
                 {
-                    statement();
+                    Statement();
                 }
                 else
                 {
@@ -114,7 +114,7 @@ public partial class Interpreter
     }
     #endregion
     #region ConditionalOverload
-    private object RConditional()
+    private object ReturnConditionalValue()
     {
         var token = lexer.GetNextToken();
         if (token.type == TokenType.Punctuation && token.value == "(")
@@ -202,5 +202,4 @@ public partial class Interpreter
         }
     }
     #endregion
-
 }

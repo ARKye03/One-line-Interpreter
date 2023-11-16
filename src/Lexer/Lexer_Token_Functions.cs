@@ -37,29 +37,6 @@ public partial class Lexer
         return new Token(TokenType.Number, result, line, column);
     }
     /// <summary>
-    /// Scans and returns a token of type Identifier.
-    /// </summary>
-    /// <returns>The Identifier token.</returns>
-    private Token Identifier()
-    {
-        string result = "";
-        while (current_char != '\0' && char.IsLetterOrDigit(current_char))
-        {
-            result += current_char;
-            Advance();
-        }
-        return new Token(TokenType.Identifier, result, line, column);
-    }
-    /// <summary>
-    /// Consumes the current character and returns a separator token.
-    /// </summary>
-    /// <returns>A separator token.</returns>
-    private Token Separator()
-    {
-        Advance();
-        return new Token(TokenType.Separator, "@", line, column);
-    }
-    /// <summary>
     /// Parses a string literal token.
     /// </summary>
     /// <returns>The parsed string literal token.</returns>

@@ -1,5 +1,6 @@
 namespace mini_compiler;
 
+#region TokenTypeEnum
 /// <summary>
 /// Represents the type of a token in the mini_kompiler language.
 /// </summary>
@@ -24,6 +25,8 @@ public enum TokenType
     Semicolon,
     Separator
 }
+#endregion
+#region TokenClass
 /// <summary>
 /// Represents a token in the source code.
 /// </summary>
@@ -55,3 +58,4 @@ public class Token
         return $"Token({type}, {value}, {line}, {column})";
     }
 }
+#endregion

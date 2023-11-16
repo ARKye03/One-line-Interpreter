@@ -1,6 +1,6 @@
 
 namespace mini_compiler;
-
+#region PredefineFunctionClass
 /// <summary>
 /// Represents a function with a name, number of parameters, and implementation.
 /// </summary>
@@ -16,6 +16,8 @@ public class Functions
         Implementation = implementation;
     }
 }
+#endregion
+#region DeclarableFunctionClass
 /// <summary>
 /// Represents a function in the program.
 /// </summary>
@@ -42,7 +44,8 @@ public class DFunction : Token
         functions.Add(this); // Add this instance of DFunction to the functions list
     }
 }
-
+#endregion
+#region Interpreter_Function_Eval
 public partial class Interpreter
 {
     /// <summary>
@@ -281,12 +284,14 @@ public partial class Interpreter
             {
                 return variables[token.value];
             }
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Undefined variable '{token.value}' at line {token.line} and column {token.column}");
-            return null!;
+            throw new Exception(); //Don't ask me why i did this, I'm desesperado.
         }
         else if (token.type == TokenType.Punctuation && token.value == "(")
         {
             var expressionValue = Expression(tokens);
+            variables.Clear();
             var nextToken = tokens[0];
             tokens.RemoveAt(0);
             if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
@@ -326,7 +331,7 @@ public partial class Interpreter
         }
         else if (token.type == TokenType.IfKeyword)
         {
-            return RConditional(tokens);
+            return ReturnConditionalValue(tokens);
         }
         else if (token.type == TokenType.Operator && token.value == "-")
         {
@@ -352,7 +357,7 @@ public partial class Interpreter
     /// </summary>
     /// <param name="tokens">The list of tokens representing the conditional statement.</param>
     /// <returns>The result of the corresponding block of code if the condition is true, otherwise null.</returns>
-    private object RConditional(List<Token> tokens)
+    private object ReturnConditionalValue(List<Token> tokens)
     {
         var token = tokens[0];
         tokens.RemoveAt(0);
@@ -482,7 +487,8 @@ public partial class Interpreter
     }
     #endregion
 }
-
+#endregion
+#region Lexer_FunctionDeclaration
 public partial class Lexer
 {
     /// <summary>
@@ -565,3 +571,4 @@ public partial class Lexer
         return new DFunction(expressionTokens, function_name, parameters, TokenType.FunctionDeclaration);
     }
 }
+#endregion

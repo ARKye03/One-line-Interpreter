@@ -16,7 +16,7 @@ public class Console_UI
     {
         // Run interpreter
         Interpreter interpreter = new(sourceCode!);
-        interpreter.Run();
+        try { interpreter.Run(); } catch (Exception) { }
     }
     #endregion
     #region UI
@@ -65,7 +65,9 @@ public class Console_UI
                 }
                 // Run interpreter
                 Interpreter interpreter = new(sourceCode!);
-                interpreter.Run();
+                try { interpreter.Run(); } catch (Exception) { Console.ResetColor(); continue; }
+
+
             }
         }
     }
@@ -96,7 +98,9 @@ public class Console_UI
             "IsPrime(x):        | Returns true if x is a prime number, false otherwise. | Example: IsPrime(5) returns true.",
             "IsEven(x):         | Returns true if x is an even number, false otherwise. | Example: IsEven(5) returns false.",
             "IsDivisible(x, y): | Returns true if x is divisible by y, false otherwise. | Example: IsDivisible(10, 5) returns true.",
-            "IsPalindrome(x):   | Returns true if x is a palindrome, false otherwise.   | Example: IsPalindrome(\"radar\") returns true."
+            "IsPalindrome(x):   | Returns true if x is a palindrome, false otherwise.   | Example: IsPalindrome(\"radar\") returns true.",
+            "Max(x, y):         | Returns the maximum of x and y.                       | Example: Max(2, 3) returns 3.",
+            "Min(x, y):         | Returns the minimum of x and y.                       | Example: Min(2, 3) returns 2."
         };
 
         foreach (string description in functionDescriptions)

@@ -153,12 +153,14 @@ public partial class Interpreter
             {
                 return variables[token.value];
             }
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Undefined variable '{token.value}' at line {token.line} and column {token.column}");
-            return null!;
+            throw new Exception(); //Don't ask me why i did this, I'm desesperado.
         }
         else if (token.type == TokenType.Punctuation && token.value == "(")
         {
             var expressionValue = Expression();
+            variables.Clear();
             var nextToken = lexer.GetNextToken();
             if (nextToken.type != TokenType.Punctuation || nextToken.value != ")")
             {
@@ -194,7 +196,7 @@ public partial class Interpreter
         }
         else if (token.type == TokenType.IfKeyword && token.value == "if")
         {
-            return RConditional();
+            return ReturnConditionalValue();
         }
         else if (token.type == TokenType.Operator && token.value == "-")
         {

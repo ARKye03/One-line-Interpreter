@@ -1,8 +1,7 @@
 namespace mini_compiler;
 public partial class Interpreter
 {
-    // List of declarable functions, to be used in the program
-
+    #region FunctionsList
     /// <summary>
     /// List of DFunction objects representing the functions in the program.
     /// </summary>
@@ -38,7 +37,12 @@ public partial class Interpreter
         new("IsEven", 1, args => IsEven(Convert.ToInt32(args[0]))),
         new("IsDivisible", 2, args => IsDivisible(Convert.ToInt32(args[0]), Convert.ToInt32(args[1]))),
         new("IsPalindrome", 1, args => IsPalindrome(args[0].ToString()!)),
+        new("Max", 2, args => Math.Max(Convert.ToSingle(args[0]), Convert.ToSingle(args[1]))),
+        new("Min", 2, args => Math.Min(Convert.ToSingle(args[0]), Convert.ToSingle(args[1]))),
+
     };
+    #endregion
+    #region ExtraMethods
     /// <summary>
     /// Calculates the factorial of a given integer.
     /// </summary>
@@ -118,4 +122,5 @@ public partial class Interpreter
         var reversedStr = new string(str.Reverse().ToArray());
         return str == reversedStr;
     }
+    #endregion
 }

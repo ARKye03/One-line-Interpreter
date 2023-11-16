@@ -5,12 +5,15 @@ namespace mini_compiler;
 /// </summary>
 public partial class Lexer
 {
+    #region SomeVars
     private readonly string text; // Contains the value of actual Token
     private int pos; // Contains the position of the actual Token
     private int line; // Contains the line of the actual Token
     private int column; // Contains the column of the actual Token
     private char current_char; // Contains the actual character
     private readonly List<Token> readTokens = new(); // Contains the tokens that have been read but not yet consumed
+    #endregion
+    #region LexerConstructor
     public Lexer(string text) // Constructor
     {
         this.text = text;
@@ -19,6 +22,8 @@ public partial class Lexer
         this.column = 1;
         this.current_char = text[pos];
     }
+    #endregion
+    #region MainLexerFunction
     /// <summary>
     /// Function that advances one token when trying to parse and evaluate expressions
     /// </summary>
@@ -157,4 +162,5 @@ public partial class Lexer
         }
         return new Token(TokenType.EOF, null!, line, column);
     }
+    #endregion
 }

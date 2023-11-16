@@ -2,8 +2,11 @@ namespace mini_compiler;
 
 public partial class Interpreter
 {
+    #region Variables
     public Lexer lexer; // Lexer, to lex while parsing
-
+    private readonly Dictionary<string, object> variables = new(); // Variable assignment, this handles all vars
+    #endregion
+    #region InterpreterConstructor
     /// <summary>
     /// Constructor of the interpreter
     /// </summary>
@@ -13,6 +16,8 @@ public partial class Interpreter
     {
         lexer = new Lexer(sourceCode);
     }
+    #endregion
+    #region EvaluateSourceCode
     /// <summary>
     /// This is the equivalent to EvaluateExpression
     /// </summary>
@@ -56,7 +61,7 @@ public partial class Interpreter
         else if (token.type == TokenType.LetKeyword)
         {
             // Process the assignment of values to variables
-            assignment();
+            LetAssignment();
         }
         //If an If xd
         else if (token.type == TokenType.IfKeyword)
@@ -64,17 +69,15 @@ public partial class Interpreter
             // Process the conditional instruction
             Conditional();
         }
-
     }
-    // Variable assignment, this handles all vars
-    private readonly Dictionary<string, object> variables = new();
-
+    #endregion
+    #region StatementEvaluate
     /// <summary>
     /// This method analyzes and executes a statement based on the token type obtained from the lexer.
     /// </summary>
     // It's almost the most important here, it's the one that makes the magic happen
     // So this one is called everytime a statement is found, and makes possible to run expressions inside expressions
-    private void statement()
+    private void Statement()
     {
         // Get the next token
         var token = lexer.GetNextToken();
@@ -107,7 +110,7 @@ public partial class Interpreter
         // If a "let" is found
         else if (token.type == TokenType.LetKeyword)
         {
-            assignment();
+            LetAssignment();
         }
         // If an If xd again
         else if (token.type == TokenType.IfKeyword)
@@ -131,11 +134,12 @@ public partial class Interpreter
         token = lexer.GetNextToken(); // Re-use the token 
         if (token.type == TokenType.EOL)
         {
-            statement(); // Next statement
+            Statement(); // Next statement
         }
         else
         {
             lexer.UngetToken(token); // Return the token to be analyzed in the next iteration
         }
     }
+    #endregion
 }
