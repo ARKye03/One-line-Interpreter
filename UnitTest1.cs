@@ -86,14 +86,12 @@ public class FunctionTests
         int result = int.Parse(RunInterpreter($"print(Rand({min}, {max}));"));
         Assert.That(result, Is.GreaterThanOrEqualTo(min).And.LessThan(max));
     }
-    private string RunInterpreter(string sourceCode)
+    private static string RunInterpreter(string sourceCode)
     {
-        using (var sw = new StringWriter())
-        {
-            Console.SetOut(sw);
-            Console_UI.Test(sourceCode);
-            return sw.ToString().Trim();
-        }
+        using var sw = new StringWriter();
+        Console.SetOut(sw);
+        Console_UI.Test(sourceCode);
+        return sw.ToString().Trim();
     }
 }
 
@@ -276,14 +274,12 @@ public class MainTests
     {
         Assert.That(RunInterpreter("print(2 + 5);"), Is.EqualTo("7"));
     }
-    private string RunInterpreter(string sourceCode)
+    private static string RunInterpreter(string sourceCode)
     {
-        using (var sw = new StringWriter())
-        {
-            Console.SetOut(sw);
-            Console_UI.Test(sourceCode);
-            return sw.ToString().Trim();
-        }
+        using var sw = new StringWriter();
+        Console.SetOut(sw);
+        Console_UI.Test(sourceCode);
+        return sw.ToString().Trim();
     }
 }
 [TestFixture]
@@ -300,13 +296,41 @@ public class VirginTest
     {
         Assert.That(RunInterpreter("print(\"🙂\");"), Is.EqualTo("🙂"));
     }
-    private string RunInterpreter(string sourceCode)
+    private static string RunInterpreter(string sourceCode)
     {
-        using (var sw = new StringWriter())
-        {
-            Console.SetOut(sw);
-            Console_UI.Test(sourceCode);
-            return sw.ToString().Trim();
-        }
+        using var sw = new StringWriter();
+        Console.SetOut(sw);
+        Console_UI.Test(sourceCode);
+        return sw.ToString().Trim();
+    }
+}
+
+[TestFixture]
+public class ConstantsTest
+{
+    [Test]
+    public void TestConstants()
+    {
+        Assert.That(RunInterpreter("print(CoPI);"), Is.EqualTo(((float)Math.PI).ToString()));
+        Assert.That(RunInterpreter("print(CoE);"), Is.EqualTo(((float)Math.E).ToString()));
+        Assert.That(RunInterpreter("print(CoPyC);"), Is.EqualTo(((float)Math.Sqrt(2)).ToString()));
+        Assert.That(RunInterpreter("print(CoThC);"), Is.EqualTo(((float)Math.Sqrt(3)).ToString()));
+        Assert.That(RunInterpreter("print(CoG);"), Is.EqualTo("6.6743"));
+        Assert.That(RunInterpreter("print(CoPhi);"), Is.EqualTo(((float)(1 + Math.Sqrt(5)) / 2).ToString()));
+        Assert.That(RunInterpreter("print(CoGamma);"), Is.EqualTo("0.5772157"));
+        Assert.That(RunInterpreter("print(CoGc);"), Is.EqualTo("0.9159656"));
+        Assert.That(RunInterpreter("print(CoK);"), Is.EqualTo("2.685452"));
+        Assert.That(RunInterpreter("print(CoOmega);"), Is.EqualTo("0.56714326"));
+        Assert.That(RunInterpreter("print(CoA);"), Is.EqualTo("1.2824271"));
+        Assert.That(RunInterpreter("print(CoM);"), Is.EqualTo("0.2614972"));
+        Assert.That(RunInterpreter("print(CoKp);"), Is.EqualTo("0.2758229"));
+        Assert.That(RunInterpreter("print(CoH);"), Is.EqualTo("6.62607"));
+    }
+    private static string RunInterpreter(string sourceCode)
+    {
+        using var sw = new StringWriter();
+        Console.SetOut(sw);
+        Console_UI.Test(sourceCode);
+        return sw.ToString().Trim();
     }
 }
