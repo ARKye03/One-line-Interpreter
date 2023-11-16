@@ -116,10 +116,16 @@ public class MainTests
         Assert.That(RunInterpreter("print(pow(2,3));"), Is.EqualTo("8"));
     }
     [Test]
+    public void StackOverFlowTest()
+    {
+        Assert.That(RunInterpreter("function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(fib(15000));"), Is.EqualTo("StackOverFlow Exception, more than 2000 iterations"));
+    }
+    [Test]
     public void Fib()
     {
         Assert.That(RunInterpreter("function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(fib(5));"), Is.EqualTo("8"));
+        Assert.That(RunInterpreter("print(fib(15));"), Is.EqualTo("987"));
     }
     [Test]
     public void MCD_Condition_Function_True()
@@ -311,7 +317,7 @@ public class ConstantsTest
     [Test]
     public void TestConstants()
     {
-        Assert.That(RunInterpreter("print(CoPI);"), Is.EqualTo(((float)Math.PI).ToString()));
+        Assert.That(RunInterpreter("print(-CoPI);"), Is.EqualTo((-(float)Math.PI).ToString()));
         Assert.That(RunInterpreter("print(CoE);"), Is.EqualTo(((float)Math.E).ToString()));
         Assert.That(RunInterpreter("print(CoPyC);"), Is.EqualTo(((float)Math.Sqrt(2)).ToString()));
         Assert.That(RunInterpreter("print(CoThC);"), Is.EqualTo(((float)Math.Sqrt(3)).ToString()));
@@ -325,6 +331,23 @@ public class ConstantsTest
         Assert.That(RunInterpreter("print(CoM);"), Is.EqualTo("0.2614972"));
         Assert.That(RunInterpreter("print(CoKp);"), Is.EqualTo("0.2758229"));
         Assert.That(RunInterpreter("print(CoH);"), Is.EqualTo("6.62607"));
+    }
+    private static string RunInterpreter(string sourceCode)
+    {
+        using var sw = new StringWriter();
+        Console.SetOut(sw);
+        Console_UI.Test(sourceCode);
+        return sw.ToString().Trim();
+    }
+}
+[TestFixture]
+public class ZTest
+{
+    [Test]
+    public void Equadoral()
+    {
+        Assert.That(RunInterpreter("function d(x) => \"🙂\";"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(\"Clase emoji: \" + d(1));"), Is.EqualTo("Clase emoji: 🙂"));
     }
     private static string RunInterpreter(string sourceCode)
     {
