@@ -191,7 +191,7 @@ public class MainTests
     [Test]
     public void NegativeTest()
     {
-        Assert.That(RunInterpreter("let x = -5 in print(x - 3);"), Is.EqualTo("-8"));
+        Assert.That(RunInterpreter("print(-(5 + 5));"), Is.EqualTo("-10"));
     }
 
     [Test]
