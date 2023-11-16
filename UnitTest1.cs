@@ -199,12 +199,18 @@ public class MainTests
     [Test]
     public void PrintTest()
     {
-        Assert.That(RunInterpreter("print(let x = 12 in x + let y = 42 in y);"), Is.EqualTo("54"));
+        Assert.That(RunInterpreter("print((let x = 12 in x) + (let y = 42 in y));"), Is.EqualTo("54"));
+    }
+    [Test]
+    public void LetScopeFunction()
+    {
+        Assert.That(RunInterpreter("function Test(x,y) => let a=x in (let b=y in a+b) + b);"), Is.EqualTo(""));
+        Assert.That(RunInterpreter("print(Test(5,10));"), Is.EqualTo("Undefined variable 'b' at line 1 and column 54"));
     }
     [Test]
     public void LetScope()
     {
-        Assert.That(RunInterpreter("print(let a=2 in (let b=5 in a+b) + b);"), Is.EqualTo("Error"));
+        Assert.That(RunInterpreter("print(let a=2 in (let b=5 in a+b) + b);"), Is.EqualTo("Undefined variable 'b' at line 1 and column 38"));
     }
     [Test]
     public void Test1()
@@ -233,7 +239,7 @@ public class MainTests
     [Test]
     public void Test5()
     {
-        Assert.That(RunInterpreter("let x = 25 in print(x - (5^2));"), Is.EqualTo("0"));
+        Assert.That(RunInterpreter("let x = 25 in print(x - (5)^2);"), Is.EqualTo("0"));
     }
 
     [Test]
