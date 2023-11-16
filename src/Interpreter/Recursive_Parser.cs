@@ -204,12 +204,23 @@ public partial class Interpreter
         }
         else if (token.type == TokenType.Operator && token.value == "-")
         {
-            var nextToken = lexer.GetNextToken();
-            if (nextToken.type == TokenType.Number)
+            bool isNegative = false;
+            while (token.type == TokenType.Operator && token.value == "-")
             {
-                return -float.Parse(nextToken.value);
+                isNegative = !isNegative;
+                token = lexer.GetNextToken();
             }
-            Console.WriteLine($"Expected number after '-' operator at line {nextToken.line} and column {nextToken.column}");
+            if (token.type == TokenType.Number)
+            {
+                return (isNegative ? -1 : 1) * float.Parse(token.value);
+            }
+            else if (token.type == TokenType.Punctuation && token.value == "(")
+            {
+                var expressionValue = Expression();
+                return (isNegative ? -1 : 1) * (float)expressionValue;
+            }
+
+            Console.WriteLine($"Expected number after '-' operator at line {token.line} and column {token.column}");
             return null!;
         }
         else

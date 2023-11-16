@@ -338,16 +338,19 @@ public partial class Interpreter
         {
             return ReturnConditionalValue(tokens);
         }
-        else if (token.type == TokenType.Operator && token.value == "-")
+        else if (token.type == TokenType.Punctuation && token.value == "(")
         {
-            var nextToken = tokens[0];
-            tokens.RemoveAt(0);
-            if (nextToken.type == TokenType.Number)
+            bool isNegative = false;
+            while (tokens[0].type == TokenType.Operator && tokens[0].value == "-")
             {
-                return -float.Parse(nextToken.value);
+                isNegative = !isNegative;
+                tokens.RemoveAt(0);
             }
-            Console.WriteLine($"Expected number after '-' operator at line {nextToken.line} and column {nextToken.column}");
-            return null!;
+
+            var expressionValue = Expression();
+            tokens.RemoveAt(0);  // remove the closing parenthesis
+
+            return (isNegative ? -1 : 1) * (float)expressionValue;
         }
         else
         {

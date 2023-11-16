@@ -67,6 +67,10 @@ public partial class Interpreter
             // Process the conditional instruction
             Conditional();
         }
+        else if (token.type != TokenType.FunctionDeclaration)
+        {
+            Console.WriteLine($"Undefined instruction \"{token.value}\" at column {token.column}!");
+        }
     }
     #endregion
     #region StatementEvaluate

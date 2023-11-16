@@ -31,7 +31,7 @@ public partial class Lexer
     /// Returns the next character in the input string without consuming it.
     /// </summary>
     /// <returns>The next character in the input string, or '\0' if there are no more characters.</returns>
-    private char Peek()
+    public char Peek()
     {
         var peek_pos = pos + 1;
         if (peek_pos >= text.Length)
