@@ -106,39 +106,63 @@ public class MainTests
     [Test]
     public void EqStr()
     {
-        Assert.That(RunInterpreter("function EqStr(x,y) => if(x == y) \"true\" else \"false\";"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(EqStr(\"perro\",\"perro\"));"), Is.EqualTo("true"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function EqStr(x,y) => if(x == y) \"true\" else \"false\";"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(EqStr(\"perro\",\"perro\"));"), Is.EqualTo("true"));
+        });
     }
+
     [Test]
     public void Pow()
     {
-        Assert.That(RunInterpreter("function pow(x,y) => Pow(x,y);"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(pow(2,3));"), Is.EqualTo("8"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function pow(x,y) => Pow(x,y);"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(pow(2,3));"), Is.EqualTo("8"));
+        });
     }
+
     [Test]
     public void StackOverFlowTest()
     {
-        Assert.That(RunInterpreter("function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(fib(15000));"), Is.EqualTo("StackOverFlow Exception, more than 2000 iterations"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(fib(15000));"), Is.EqualTo("StackOverFlow Exception, more than 2000 iterations"));
+        });
     }
+
     [Test]
     public void Fib()
     {
-        Assert.That(RunInterpreter("function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(fib(15));"), Is.EqualTo("987"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function fib(n) => if (n > 1) fib(n-1) + fib(n-2) else 1;"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(fib(15));"), Is.EqualTo("987"));
+        });
     }
+
     [Test]
     public void MCD_Condition_Function_True()
     {
-        Assert.That(RunInterpreter("function mcd(x,y) => if (x % y != 0) \"No\" else \"Yes\";"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(mcd(54,5));"), Is.EqualTo("No"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function mcd(x,y) => if (x % y != 0) \"No\" else \"Yes\";"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(mcd(54,5));"), Is.EqualTo("No"));
+        });
     }
+
     [Test]
     public void MCD_Condition_Function()
     {
-        Assert.That(RunInterpreter("function mcd(x,y) => if (x % y != 0) \"No\" else \"Yes\";"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(mcd(55,5));"), Is.EqualTo("Yes"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function mcd(x,y) => if (x % y != 0) \"No\" else \"Yes\";"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(mcd(55,5));"), Is.EqualTo("Yes"));
+        });
     }
+
     [Test]
     public void LetAssignConditionTrue()
     {
@@ -159,14 +183,21 @@ public class MainTests
     [Test]
     public void Func2()
     {
-        Assert.That(RunInterpreter("function Pow(x,y) => x^y;"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(Pow(2,5));"), Is.EqualTo("32"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function Pow(x,y) => x^y;"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(Pow(2,5));"), Is.EqualTo("32"));
+        });
     }
+
     [Test]
     public void Func1()
     {
-        Assert.That(RunInterpreter("function Sum(x,y) => x+y;"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print((Sum(5,2) + Sum(2,2))^2);"), Is.EqualTo("121"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function Sum(x,y) => x+y;"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print((Sum(5,2) + Sum(2,2))^2);"), Is.EqualTo("121"));
+        });
     }
 
     [Test]
@@ -208,9 +239,13 @@ public class MainTests
     [Test]
     public void LetScopeFunction()
     {
-        Assert.That(RunInterpreter("function Test(x,y) => let a=x in (let b=y in a+b) + b);"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(Test(5,10));"), Is.EqualTo("Undefined variable 'b' at line 1 and column 54"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function Test(x,y) => let a=x in (let b=y in a+b) + b);"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(Test(5,10));"), Is.EqualTo("Undefined variable 'b' at line 1 and column 54"));
+        });
     }
+
     [Test]
     public void LetScope()
     {
@@ -289,14 +324,18 @@ public class MainTests
     }
 }
 [TestFixture]
-public class VirginTest
+public class EmojiTests
 {
     [Test]
     public void EmojiTest2()
     {
-        Assert.That(RunInterpreter("function d(x) => \"🙂\";"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(\"Clase emoji: \" + d(1));"), Is.EqualTo("Clase emoji: 🙂"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function d(x) => \"🙂\";"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(\"Clase emoji: \" + d(1));"), Is.EqualTo("Clase emoji: 🙂"));
+        });
     }
+
     [Test]
     public void EmojiTest()
     {
@@ -317,21 +356,25 @@ public class ConstantsTest
     [Test]
     public void TestConstants()
     {
-        Assert.That(RunInterpreter("print(-CoPI);"), Is.EqualTo((-(float)Math.PI).ToString()));
-        Assert.That(RunInterpreter("print(CoE);"), Is.EqualTo(((float)Math.E).ToString()));
-        Assert.That(RunInterpreter("print(CoPyC);"), Is.EqualTo(((float)Math.Sqrt(2)).ToString()));
-        Assert.That(RunInterpreter("print(CoThC);"), Is.EqualTo(((float)Math.Sqrt(3)).ToString()));
-        Assert.That(RunInterpreter("print(CoG);"), Is.EqualTo("6.6743"));
-        Assert.That(RunInterpreter("print(CoPhi);"), Is.EqualTo(((float)(1 + Math.Sqrt(5)) / 2).ToString()));
-        Assert.That(RunInterpreter("print(CoGamma);"), Is.EqualTo("0.5772157"));
-        Assert.That(RunInterpreter("print(CoGc);"), Is.EqualTo("0.9159656"));
-        Assert.That(RunInterpreter("print(CoK);"), Is.EqualTo("2.685452"));
-        Assert.That(RunInterpreter("print(CoOmega);"), Is.EqualTo("0.56714326"));
-        Assert.That(RunInterpreter("print(CoA);"), Is.EqualTo("1.2824271"));
-        Assert.That(RunInterpreter("print(CoM);"), Is.EqualTo("0.2614972"));
-        Assert.That(RunInterpreter("print(CoKp);"), Is.EqualTo("0.2758229"));
-        Assert.That(RunInterpreter("print(CoH);"), Is.EqualTo("6.62607"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("print(-CoPI);"), Is.EqualTo((-(float)Math.PI).ToString()));
+            Assert.That(RunInterpreter("print(CoE);"), Is.EqualTo(((float)Math.E).ToString()));
+            Assert.That(RunInterpreter("print(CoPyC);"), Is.EqualTo(((float)Math.Sqrt(2)).ToString()));
+            Assert.That(RunInterpreter("print(CoThC);"), Is.EqualTo(((float)Math.Sqrt(3)).ToString()));
+            Assert.That(RunInterpreter("print(CoG);"), Is.EqualTo("6.6743"));
+            Assert.That(RunInterpreter("print(CoPhi);"), Is.EqualTo(((float)(1 + Math.Sqrt(5)) / 2).ToString()));
+            Assert.That(RunInterpreter("print(CoGamma);"), Is.EqualTo("0.5772157"));
+            Assert.That(RunInterpreter("print(CoGc);"), Is.EqualTo("0.9159656"));
+            Assert.That(RunInterpreter("print(CoK);"), Is.EqualTo("2.685452"));
+            Assert.That(RunInterpreter("print(CoOmega);"), Is.EqualTo("0.56714326"));
+            Assert.That(RunInterpreter("print(CoA);"), Is.EqualTo("1.2824271"));
+            Assert.That(RunInterpreter("print(CoM);"), Is.EqualTo("0.2614972"));
+            Assert.That(RunInterpreter("print(CoKp);"), Is.EqualTo("0.2758229"));
+            Assert.That(RunInterpreter("print(CoH);"), Is.EqualTo("6.62607"));
+        });
     }
+
     private static string RunInterpreter(string sourceCode)
     {
         using var sw = new StringWriter();
@@ -341,14 +384,27 @@ public class ConstantsTest
     }
 }
 [TestFixture]
-public class ZTest
+public class NegativeTests
 {
     [Test]
-    public void Equadoral()
+    public void Extra_Negative()
     {
-        Assert.That(RunInterpreter("function d(x) => \"🙂\";"), Is.EqualTo(""));
-        Assert.That(RunInterpreter("print(\"Clase emoji: \" + d(1));"), Is.EqualTo("Clase emoji: 🙂"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function d(x) => -(x);"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(d(1));"), Is.EqualTo("-1"));
+        });
     }
+    [Test]
+    public void Func_Negative()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(RunInterpreter("function d(x) => -(let y = x in y);"), Is.EqualTo(""));
+            Assert.That(RunInterpreter("print(d(1));"), Is.EqualTo("-1"));
+        });
+    }
+
     private static string RunInterpreter(string sourceCode)
     {
         using var sw = new StringWriter();
