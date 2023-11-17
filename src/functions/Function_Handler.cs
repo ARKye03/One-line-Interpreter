@@ -48,6 +48,7 @@ public class DFunction : Token
 #region Interpreter_Function_Eval
 public partial class Interpreter
 {
+    short StackOverFlowCounter = 0;
     /// <summary>
     /// Evaluates a function with the given arguments by substituting the parameters in the function expression and evaluating the resulting expression.
     /// </summary>
@@ -56,6 +57,12 @@ public partial class Interpreter
     /// <returns>The result of evaluating the function expression with the substituted arguments.</returns>
     private object EvaluateFunction(DFunction fn, List<object> args) // This one used to be called "EvaFurras", but my conscience prevented me from leaving it that way.
     {
+        StackOverFlowCounter++;
+        if (StackOverFlowCounter >= 2000)
+        {
+            Console.WriteLine("StackOverFlow Exception, more than 2000 iterations");
+            throw new Exception();
+        }
         var expressionTokens = fn.expression;
         var parameterList = fn.parameters;
 
@@ -80,7 +87,7 @@ public partial class Interpreter
     /// <param name="tokens">The list of tokens to substitute arguments in.</param>
     /// <param name="argDict">The dictionary containing the argument names and their corresponding values.</param>
     /// <returns>A new list of tokens with the arguments substituted.</returns>
-    private List<Token> SubstituteArgs(List<Token> tokens, Dictionary<string, object> argDict)
+    private static List<Token> SubstituteArgs(List<Token> tokens, Dictionary<string, object> argDict)
     {
         var substitutedTokens = new List<Token>();
 
@@ -338,19 +345,33 @@ public partial class Interpreter
         {
             return ReturnConditionalValue(tokens);
         }
-        else if (token.type == TokenType.Punctuation && token.value == "(")
+        else if (token.type == TokenType.Operator && token.value == "-")
         {
-            bool isNegative = false;
-            while (tokens[0].type == TokenType.Operator && tokens[0].value == "-")
+            bool isNegative = true;
+            var nextToken = tokens[0];
+            while (nextToken.type == TokenType.Operator && nextToken.value == "-")
             {
                 isNegative = !isNegative;
                 tokens.RemoveAt(0);
+                nextToken = tokens[0];
             }
-
-            var expressionValue = Expression();
-            tokens.RemoveAt(0);  // remove the closing parenthesis
-
-            return (isNegative ? -1 : 1) * (float)expressionValue;
+            if (nextToken.type == TokenType.Number)
+            {
+                return (isNegative ? -1 : 1) * float.Parse(nextToken.value);
+            }
+            else if (nextToken.type == TokenType.Punctuation && nextToken.value == "(")
+            {
+                var expressionValue = Expression(tokens);
+                tokens.RemoveAt(0);
+                nextToken = tokens[0];
+                tokens.RemoveAt(0);  // remove the closing parenthesis
+                return (isNegative ? -1 : 1) * (float)expressionValue;
+            }
+            else
+            {
+                Console.WriteLine($"Expected number or '(' after '-' operator at line {nextToken.line} and column {nextToken.column}");
+                return null!;
+            }
         }
         else
         {

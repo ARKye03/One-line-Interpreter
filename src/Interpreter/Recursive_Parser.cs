@@ -219,9 +219,14 @@ public partial class Interpreter
                 var expressionValue = Expression();
                 return (isNegative ? -1 : 1) * (float)expressionValue;
             }
-
-            Console.WriteLine($"Expected number after '-' operator at line {token.line} and column {token.column}");
-            return null!;
+            else
+            {
+                lexer.UngetToken(token);
+                var expressionValue = Expression();
+                return (isNegative ? -1 : 1) * (float)expressionValue;
+            }
+            /* Console.WriteLine($"Expected number after '-' operator at line {token.line} and column {token.column}");
+            return null!; */
         }
         else
         {
